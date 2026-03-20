@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ILG Studio v6</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;
+  --b:rgba(255,255,255,.07);--b2:rgba(255,255,255,.13);
+  --t:#f0ede8;--t2:#8a8790;--t3:#5a5860;
+  --ac:#c8a96e;--ac2:#e8c98e;
+  --pu:#7c6fcd;--pul:#a99ee8;
+  --gr:#4caf7d;--re:#e05c5c;--bl:#5b9bd5;--or:#e8874a;--pi:#d4537e;
+  --r:10px;--rl:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);}
+
+.topbar{height:48px;background:var(--bg2);border-bottom:1px solid var(--b);display:flex;align-items:center;padding:0 14px;gap:10px;position:fixed;top:0;left:0;right:0;z-index:100;}
+.logo{font-family:'DM Serif Display',serif;font-size:14px;color:var(--ac);white-space:nowrap;}
+.logo span{color:var(--t3);font-size:10px;font-family:'DM Sans',sans-serif;font-weight:300;margin-left:5px;}
+.logo .v{font-size:8px;font-weight:700;background:var(--pu);color:#fff;border-radius:3px;padding:1px 4px;margin-left:4px;vertical-align:middle;}
+.nav{display:flex;background:var(--bg3);border-radius:7px;padding:2px;gap:1px;overflow-x:auto;}
+.nav::-webkit-scrollbar{display:none;}
+.ntab{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .14s;border:none;background:none;white-space:nowrap;}
+.ntab.active{background:var(--bg2);color:var(--t);border:1px solid var(--b2);}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gr);box-shadow:0 0 4px var(--gr);}
+.dot-lbl{font-size:10px;color:var(--t3);}
+
+.main{display:flex;height:calc(100vh - 48px);margin-top:48px;}
+
+/* LEFT */
+.panel-l{width:310px;min-width:260px;background:var(--bg2);border-right:1px solid var(--b);overflow-y:auto;display:flex;flex-direction:column;flex-shrink:0;}
+.ph{padding:11px 16px;position:sticky;top:0;background:var(--bg2);z-index:10;border-bottom:1px solid var(--b);}
+.ph-t{font-size:10px;font-weight:500;letter-spacing:.1em;color:var(--t3);text-transform:uppercase;}
+.pb{padding:13px 16px;display:flex;flex-direction:column;gap:12px;flex:1;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:10px;font-weight:500;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;}
+.field input,.field textarea,.field select{font-family:'DM Sans',sans-serif;font-size:12px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);color:var(--t);padding:7px 9px;width:100%;outline:none;transition:border-color .14s;}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--b2);}
+.field textarea{min-height:50px;resize:vertical;}
+.field select{appearance:none;cursor:pointer;}
+.field select option{background:var(--bg3);}
+.mode-row{display:flex;background:var(--bg3);border-radius:var(--r);padding:2px;gap:1px;}
+.mbtn{flex:1;padding:6px 3px;text-align:center;font-size:10px;font-weight:500;border-radius:7px;border:none;background:none;color:var(--t2);cursor:pointer;transition:all .13s;line-height:1.3;}
+.mbtn small{display:block;font-size:9px;font-weight:400;color:var(--t3);margin-top:1px;}
+.mbtn.active{background:var(--bg2);color:var(--t);border:1px solid var(--b2);}
+.chips{display:flex;flex-wrap:wrap;gap:4px;}
+.chip{font-size:10px;padding:3px 8px;border-radius:20px;border:1px solid var(--b);color:var(--t2);background:var(--bg3);cursor:pointer;transition:all .12s;white-space:nowrap;}
+.chip:hover{border-color:var(--b2);color:var(--t);}
+.chip.active{border-color:var(--ac);color:var(--ac);background:rgba(200,169,110,.08);}
+.row4{display:flex;gap:4px;}
+.rbtn{flex:1;padding:6px 2px;text-align:center;font-size:10px;font-weight:500;border-radius:var(--r);border:1px solid var(--b);background:var(--bg3);color:var(--t2);cursor:pointer;transition:all .12s;}
+.rbtn small{display:block;font-size:9px;color:var(--t3);font-weight:400;margin-top:1px;}
+.rbtn.lang.active{border-color:var(--pul);color:var(--pul);background:rgba(124,111,205,.1);}
+.rbtn.cnt.active{border-color:var(--gr);color:var(--gr);background:rgba(76,175,125,.08);}
+
+/* SECTION TOGGLES */
+.sec-group{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;}
+.sec-group-title{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:7px 10px;border-bottom:1px solid var(--b);}
+.sec-toggle{display:flex;align-items:center;gap:8px;padding:6px 10px;cursor:pointer;border-bottom:1px solid var(--b);transition:background .12s;}
+.sec-toggle:last-child{border-bottom:none;}
+.sec-toggle:hover{background:var(--bg2);}
+.sec-toggle input[type=checkbox]{accent-color:var(--ac);width:13px;height:13px;flex-shrink:0;}
+.sec-toggle-label{font-size:11px;color:var(--t2);flex:1;line-height:1.3;}
+.sec-toggle-label small{display:block;font-size:9px;color:var(--t3);}
+.sec-toggle.fixed{opacity:.5;cursor:default;}
+.sec-toggle.fixed input{pointer-events:none;}
+
+.gen-btn{width:100%;padding:10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;background:linear-gradient(135deg,#c8a96e,#e8c98e);color:#1a1500;border:none;border-radius:var(--rl);cursor:pointer;transition:all .18s;letter-spacing:.02em;}
+.gen-btn:hover{transform:translateY(-1px);box-shadow:0 5px 15px rgba(200,169,110,.25);}
+.gen-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.enrich-btn{width:100%;padding:10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;background:linear-gradient(135deg,#7c6fcd,#a99ee8);color:#fff;border:none;border-radius:var(--rl);cursor:pointer;transition:all .18s;letter-spacing:.02em;display:none;}
+.enrich-btn:hover{transform:translateY(-1px);box-shadow:0 5px 15px rgba(124,111,205,.3);}
+.enrich-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.prog-wrap{padding:0 16px 12px;}
+.prog-bar{height:2px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:5px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--pul));width:0%;transition:width .35s ease;}
+.prog-lbl{font-size:10px;color:var(--t3);}
+
+/* RIGHT */
+.panel-r{flex:1;background:var(--bg);overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
+.phead{padding:11px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:8px;position:sticky;top:0;background:var(--bg);z-index:10;flex-shrink:0;}
+.phead-lbl{font-size:10px;font-weight:500;letter-spacing:.1em;color:var(--t3);text-transform:uppercase;flex:1;}
+.ebts{display:flex;gap:5px;flex-wrap:wrap;}
+.ebt{padding:4px 9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;border-radius:6px;cursor:pointer;transition:all .12s;border:1px solid var(--b);background:var(--bg3);color:var(--t2);}
+.ebt:hover{color:var(--t);border-color:var(--b2);}
+.ebt.cv{border-color:rgba(124,111,205,.4);color:var(--pul);background:rgba(124,111,205,.08);}
+.ebt:disabled{opacity:.3;cursor:not-allowed;}
+.pbody{padding:20px;flex:1;}
+
+/* EBOOK SECTIONS */
+.ebook-wrap{max-width:640px;}
+.ebook-cover{background:linear-gradient(135deg,#1a1830 0%,#2a1f3d 50%,#1a2535 100%);border:1px solid var(--b);border-radius:var(--rl);padding:26px 32px;margin-bottom:14px;position:relative;overflow:hidden;}
+.ebook-cover::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(200,169,110,.15),transparent 70%);border-radius:50%;}
+.ctag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.2);padding:2px 7px;border-radius:20px;margin-bottom:11px;}
+.cttl{font-family:'DM Serif Display',serif;font-size:20px;line-height:1.25;color:var(--t);margin-bottom:5px;}
+.csub{font-size:11px;color:var(--t2);line-height:1.5;margin-bottom:16px;}
+.cmeta{display:flex;gap:14px;flex-wrap:wrap;}
+.cmi label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;display:block;}
+.cmi .val{font-size:12px;font-weight:500;color:var(--ac2);}
+.mbadge{display:inline-block;font-size:8px;font-weight:600;text-transform:uppercase;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle;}
+.mbadge.plan{background:rgba(91,155,213,.15);color:var(--bl);border:1px solid rgba(91,155,213,.3);}
+.mbadge.full{background:rgba(200,169,110,.12);color:var(--ac);border:1px solid rgba(200,169,110,.3);}
+
+/* SECTION BLOCKS */
+.eb-section{margin-bottom:14px;}
+.eb-sec-hd{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.eb-sec-hd::after{content:'';flex:1;height:1px;background:var(--b);}
+.eb-sec-hd .sec-num{font-size:9px;color:var(--t3);background:var(--bg3);border:1px solid var(--b);border-radius:3px;padding:1px 5px;}
+.eb-card{background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);padding:12px 14px;font-size:12px;color:var(--t2);line-height:1.75;}
+.eb-card.accent{border-left:2px solid var(--ac);border-radius:0 var(--r) var(--r) 0;}
+.eb-card h4{font-size:12px;font-weight:600;color:var(--t);margin-bottom:5px;}
+.eb-card p{margin-bottom:6px;}
+
+/* COPYRIGHT */
+.copyright-card{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:10px 13px;font-size:10px;color:var(--t3);line-height:1.7;text-align:center;}
+
+/* SOMMAIRE */
+.toc-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--b);font-size:11px;color:var(--t2);}
+.toc-item:last-child{border-bottom:none;}
+.toc-num{font-size:10px;color:var(--t3);min-width:24px;}
+.toc-title{flex:1;}
+.toc-dots{flex:1;border-bottom:1px dotted var(--b2);margin:0 8px;height:1px;margin-top:8px;}
+.toc-page{font-size:10px;color:var(--t3);}
+
+/* ROADMAP */
+.roadmap-week{margin-bottom:12px;}
+.roadmap-week-title{font-size:10px;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.roadmap-day{display:flex;gap:8px;padding:4px 0;font-size:11px;color:var(--t2);}
+.roadmap-day-num{font-size:10px;color:var(--t3);min-width:40px;flex-shrink:0;}
+.roadmap-day-task{flex:1;}
+
+/* TOOLS */
+.tool-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--b);align-items:flex-start;}
+.tool-item:last-child{border-bottom:none;}
+.tool-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.tool-name{font-size:11px;font-weight:500;color:var(--t);margin-bottom:2px;}
+.tool-desc{font-size:10px;color:var(--t3);}
+.tool-link{font-size:10px;color:var(--bl);}
+
+/* GLOSSARY */
+.glossary-item{padding:6px 0;border-bottom:1px solid var(--b);}
+.glossary-item:last-child{border-bottom:none;}
+.glossary-term{font-size:11px;font-weight:600;color:var(--ac);margin-bottom:2px;}
+.glossary-def{font-size:11px;color:var(--t2);line-height:1.6;}
+
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.results-col{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:10px 12px;}
+.results-col-title{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ac);margin-bottom:7px;}
+.results-item{font-size:10px;color:var(--t2);padding:3px 0;display:flex;gap:5px;}
+.results-item::before{content:'✓';color:var(--gr);flex-shrink:0;}
+
+/* NOTES */
+.notes-section{display:flex;flex-direction:column;gap:8px;}
+.notes-line{height:28px;border-bottom:1px solid var(--b);width:100%;}
+.notes-prompt{font-size:10px;color:var(--t3);font-style:italic;margin-bottom:4px;}
+
+/* BONUS */
+.bonus-item{display:flex;gap:10px;padding:8px 10px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);margin-bottom:6px;}
+.bonus-tag{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;background:rgba(200,169,110,.12);color:var(--ac);border:1px solid rgba(200,169,110,.2);height:fit-content;white-space:nowrap;}
+.bonus-title{font-size:11px;font-weight:500;color:var(--t);margin-bottom:2px;}
+.bonus-desc{font-size:10px;color:var(--t3);}
+
+/* GUARANTEE */
+.guarantee-card{background:linear-gradient(135deg,rgba(76,175,125,.06),rgba(76,175,125,.03));border:1px solid rgba(76,175,125,.2);border-radius:var(--rl);padding:14px 16px;text-align:center;}
+.guarantee-icon{font-size:24px;margin-bottom:8px;}
+.guarantee-title{font-size:13px;font-weight:600;color:var(--gr);margin-bottom:6px;}
+.guarantee-text{font-size:11px;color:var(--t2);line-height:1.7;}
+
+/* CHAPTER */
+.chi{border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:5px;}
+.chi:hover{border-color:var(--b2);}
+.chh{display:flex;align-items:center;gap:9px;padding:9px 11px;cursor:pointer;background:var(--bg2);}
+.chh:hover{background:var(--bg3);}
+.chn{width:22px;height:22px;border-radius:50%;background:var(--bg3);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--t3);flex-shrink:0;}
+.chi.open .chn{background:rgba(200,169,110,.1);border-color:rgba(200,169,110,.3);color:var(--ac);}
+.cht{font-size:11px;font-weight:500;color:var(--t);flex:1;}
+.cha{font-size:9px;color:var(--t3);transition:transform .14s;}
+.chi.open .cha{transform:rotate(180deg);}
+.chb{display:none;padding:11px;background:var(--bg);border-top:1px solid var(--b);font-size:11px;color:var(--t2);line-height:1.75;}
+.chi.open .chb{display:block;}
+.ch-kp{display:flex;gap:6px;font-size:11px;color:var(--t2);padding:2px 0;}
+.ch-kp::before{content:'→';color:var(--ac);flex-shrink:0;}
+.ch-act{background:rgba(76,175,125,.06);border:1px solid rgba(76,175,125,.15);border-radius:var(--r);padding:6px 9px;font-size:10px;color:var(--gr);margin-top:8px;}
+.ex-box{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:7px 9px;margin:6px 0;font-size:10px;}
+.ex-lbl{font-size:9px;font-weight:600;color:var(--ac);text-transform:uppercase;margin-bottom:2px;}
+.warn-box{background:rgba(224,92,92,.05);border:1px solid rgba(224,92,92,.15);border-radius:var(--r);padding:6px 9px;margin:6px 0;font-size:10px;color:var(--re);}
+.warn-box::before{content:'⚠ ';font-weight:600;}
+.cta-box{background:linear-gradient(135deg,rgba(200,169,110,.06),rgba(124,111,205,.06));border:1px solid rgba(200,169,110,.15);border-radius:var(--rl);padding:13px 17px;text-align:center;margin-top:10px;}
+.cta-t{font-size:12px;color:var(--t2);line-height:1.6;font-style:italic;}
+.src-block{padding:10px 13px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);}
+.src-item{display:flex;gap:7px;padding:5px 0;border-bottom:1px solid var(--b);font-size:10px;color:var(--t2);}
+.src-item:last-child{border-bottom:none;}
+.src-n{font-size:9px;font-weight:600;color:var(--ac);min-width:16px;}
+.src-ttl{color:var(--t);font-weight:500;font-size:11px;margin-bottom:1px;}
+.src-meta{color:var(--t3);font-size:10px;}
+.cl-fin{display:flex;flex-direction:column;gap:5px;}
+.clf-i{display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--t2);}
+.clf-b{width:13px;height:13px;border:1px solid var(--b2);border-radius:3px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:9px;color:var(--gr);}
+.sk{background:linear-gradient(90deg,var(--bg3) 25%,var(--bg2) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shim 1.4s infinite;border-radius:6px;}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px;}
+
+/* GENERIC PANELS */
+.gp{flex:1;background:var(--bg);overflow-y:auto;display:none;flex-direction:column;}
+.gp.active{display:flex;}
+.gp-head{padding:11px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:8px;position:sticky;top:0;background:var(--bg);z-index:10;}
+.gp-head h2{font-size:13px;font-weight:500;color:var(--t);flex:1;}
+.gp-head span{font-size:10px;color:var(--t3);}
+.gp-body{padding:18px 20px;flex:1;}
+
+/* MARKETING */
+.mkt-no-eb{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;gap:8px;text-align:center;padding:28px;}
+.mkt-no-eb p{font-size:11px;color:var(--t3);max-width:230px;line-height:1.6;}
+.mkt-tnav{display:flex;gap:4px;padding:11px 18px;border-bottom:1px solid var(--b);flex-wrap:wrap;}
+.mkt-tt{padding:5px 11px;border-radius:var(--r);font-size:11px;font-weight:500;border:1px solid var(--b);background:var(--bg3);color:var(--t2);cursor:pointer;transition:all .13s;}
+.mkt-tt:hover{color:var(--t);border-color:var(--b2);}
+.mkt-tt.sh.active{border-color:rgba(76,175,125,.5);color:var(--gr);background:rgba(76,175,125,.08);}
+.mkt-tt.se.active{border-color:rgba(91,155,213,.5);color:var(--bl);background:rgba(91,155,213,.08);}
+.mkt-tt.so.active{border-color:rgba(232,135,74,.5);color:var(--or);background:rgba(232,135,74,.08);}
+.mkt-tt.qu.active{border-color:rgba(124,111,205,.5);color:var(--pul);background:rgba(124,111,205,.08);}
+.mkt-tt.rs.active{border-color:rgba(200,169,110,.5);color:var(--ac);background:rgba(200,169,110,.08);}
+.mkt-tt.vi.active{border-color:rgba(212,83,126,.5);color:var(--pi);background:rgba(212,83,126,.08);}
+.mkt-body{padding:18px 20px;flex:1;overflow-y:auto;}
+.mkt-gb{padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;border:none;border-radius:var(--r);cursor:pointer;transition:all .14s;color:#0f0f11;}
+.mkt-gb.sh{background:linear-gradient(135deg,#4caf7d,#6dd49a);}
+.mkt-gb.se{background:linear-gradient(135deg,#5b9bd5,#80baf0);}
+.mkt-gb.so{background:linear-gradient(135deg,#e8874a,#f0a870);}
+.mkt-gb.qu{background:linear-gradient(135deg,#7c6fcd,#a99ee8);}
+.mkt-gb.rs{background:linear-gradient(135deg,#c8a96e,#e8c98e);}
+.mkt-gb.vi{background:linear-gradient(135deg,#d4537e,#ed93b1);}
+.mkt-gb:hover{transform:translateY(-1px);opacity:.9;}
+.mkt-gb:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.mkt-res{margin-top:14px;display:none;}
+.mkt-res.show{display:block;}
+.mkt-sec{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:12px 14px;margin-bottom:10px;}
+.mkt-st{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;}
+.mkt-st.gr{color:var(--gr);}.mkt-st.bl{color:var(--bl);}.mkt-st.or{color:var(--or);}.mkt-st.pu{color:var(--pul);}.mkt-st.ac{color:var(--ac);}.mkt-st.pi{color:var(--pi);}
+.cpbtn{font-size:9px;padding:2px 7px;border-radius:4px;border:1px solid var(--b2);background:var(--bg3);color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;}
+.cpbtn:hover{color:var(--t);}
+.mkt-fl{margin-bottom:9px;}
+.mkt-fll{font-size:9px;color:var(--t3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;}
+.mkt-fv{font-size:11px;color:var(--t2);line-height:1.7;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:7px 9px;}
+.mkt-fv.hl{border-color:rgba(200,169,110,.25);background:rgba(200,169,110,.04);}
+.mtags{display:flex;flex-wrap:wrap;gap:3px;}
+.mtag{font-size:9px;padding:2px 6px;border-radius:20px;background:var(--bg3);border:1px solid var(--b);color:var(--t2);}
+.post-card{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:10px 12px;margin-bottom:7px;}
+.post-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.post-pl{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;}
+.post-pl.ig{color:#e1306c;}.post-pl.li{color:var(--bl);}.post-pl.tt{color:var(--t2);}
+.post-cnt{font-size:11px;color:var(--t2);line-height:1.7;white-space:pre-wrap;}
+.post-ht{margin-top:6px;font-size:10px;color:var(--pul);}
+.mkt-prg{font-size:11px;color:var(--t3);padding:14px 0;text-align:center;}
+.quiz-q{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:11px 13px;margin-bottom:8px;}
+.quiz-qn{font-size:11px;font-weight:500;color:var(--t);margin-bottom:7px;}
+.quiz-opt{font-size:11px;color:var(--t2);padding:5px 9px;border-radius:6px;border:1px solid var(--b);cursor:pointer;transition:all .12s;margin-bottom:4px;}
+.quiz-opt:hover{border-color:var(--b2);color:var(--t);}
+.quiz-opt.correct{border-color:rgba(76,175,125,.5);background:rgba(76,175,125,.08);color:var(--gr);}
+.quiz-exp{font-size:10px;color:var(--t3);margin-top:6px;padding-top:6px;border-top:1px solid var(--b);display:none;}
+.quiz-exp.show{display:block;}
+.resume-card{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:16px 18px;}
+.resume-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--t);margin-bottom:3px;}
+.resume-sub{font-size:11px;color:var(--t2);margin-bottom:12px;font-style:italic;}
+.resume-section{margin-bottom:11px;}
+.resume-section-title{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.resume-section-title::after{content:'';flex:1;height:1px;background:var(--b);}
+.resume-point{display:flex;gap:6px;font-size:11px;color:var(--t2);padding:2px 0;}
+.resume-point::before{content:'→';color:var(--ac);flex-shrink:0;}
+
+/* LIBRARY */
+.lib-empty{text-align:center;padding:30px;color:var(--t3);font-size:11px;line-height:1.7;}
+.lib-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lib-card{background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);padding:12px 13px;transition:all .15s;}
+.lib-card:hover{border-color:var(--b2);}
+.lib-card-title{font-size:12px;font-weight:500;color:var(--t);margin-bottom:5px;line-height:1.3;}
+.lib-card-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px;}
+.lib-badge{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:500;}
+.lib-badge.theme{background:rgba(200,169,110,.1);color:var(--ac);border:1px solid rgba(200,169,110,.2);}
+.lib-badge.lang{background:rgba(124,111,205,.1);color:var(--pul);border:1px solid rgba(124,111,205,.2);}
+.lib-badge.mode{background:rgba(76,175,125,.1);color:var(--gr);border:1px solid rgba(76,175,125,.2);}
+.lib-badge.enriched{background:rgba(91,155,213,.1);color:var(--bl);border:1px solid rgba(91,155,213,.2);}
+.lib-card-date{font-size:9px;color:var(--t3);}
+.lib-actions{display:flex;gap:5px;margin-top:8px;}
+.lib-btn{font-size:10px;padding:3px 8px;border-radius:5px;border:1px solid var(--b);background:var(--bg3);color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.lib-btn:hover{color:var(--t);border-color:var(--b2);}
+.lib-btn.del{border-color:rgba(224,92,92,.25);color:var(--re);}
+.lib-btn.del:hover{background:rgba(224,92,92,.08);}
+
+/* REVENUE */
+.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.sim-card{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:14px 16px;}
+.sim-label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.sim-val{font-size:22px;font-weight:600;color:var(--ac);}
+.sim-sub{font-size:10px;color:var(--t3);margin-top:2px;}
+.sc-tab{flex:1;padding:7px;text-align:center;font-size:11px;font-weight:500;border-radius:var(--r);border:1px solid var(--b);background:var(--bg3);color:var(--t2);cursor:pointer;transition:all .13s;}
+.sc-tab.active{border-color:var(--ac);color:var(--ac);background:rgba(200,169,110,.08);}
+.proj-table{width:100%;border-collapse:collapse;font-size:11px;}
+.proj-table th{color:var(--t3);font-weight:500;text-align:left;padding:6px 8px;border-bottom:1px solid var(--b);font-size:10px;text-transform:uppercase;}
+.proj-table td{padding:6px 8px;color:var(--t2);border-bottom:1px solid var(--b);}
+.proj-table tr:last-child td{border-bottom:none;}
+.proj-table .hi{color:var(--gr);}
+
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.kb-col{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);display:flex;flex-direction:column;min-height:200px;}
+.kb-col-head{padding:9px 12px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.kb-col-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
+.kb-col-title.idea{color:var(--t3);}.kb-col-title.wip{color:var(--or);}.kb-col-title.done{color:var(--bl);}.kb-col-title.pub{color:var(--gr);}
+.kb-count{font-size:10px;color:var(--t3);background:var(--bg3);border-radius:4px;padding:1px 6px;}
+.kb-cards{padding:8px;display:flex;flex-direction:column;gap:5px;flex:1;}
+.kb-card{background:var(--bg);border:1px solid var(--b);border-radius:var(--r);padding:8px 9px;cursor:grab;transition:all .12s;}
+.kb-card:hover{border-color:var(--b2);}
+.kb-card-title{font-size:11px;font-weight:500;color:var(--t);margin-bottom:5px;line-height:1.3;}
+.kb-card-actions{display:flex;gap:4px;}
+.kb-btn{font-size:9px;padding:2px 6px;border-radius:4px;border:1px solid var(--b);background:var(--bg2);color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.kb-btn:hover{color:var(--t);border-color:var(--b2);}
+.kb-add-btn{margin:6px;padding:6px;text-align:center;font-size:10px;color:var(--t3);border:1px dashed var(--b);border-radius:var(--r);cursor:pointer;}
+.kb-add-btn:hover{border-color:var(--b2);color:var(--t2);}
+.kb-input-row{display:flex;gap:4px;padding:0 7px 7px;}
+.kb-input{font-family:'DM Sans',sans-serif;font-size:11px;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r);color:var(--t);padding:5px 7px;flex:1;outline:none;}
+.kb-save{font-size:10px;padding:5px 8px;border:none;border-radius:var(--r);background:var(--ac);color:#1a1500;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;}
+.kb-cancel{font-size:10px;padding:5px 8px;border:1px solid var(--b);border-radius:var(--r);background:var(--bg3);color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* MODAL */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:none;align-items:center;justify-content:center;}
+.mov.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rl);padding:20px;width:420px;max-width:92vw;max-height:85vh;overflow-y:auto;}
+.modal h2{font-family:'DM Serif Display',serif;font-size:16px;margin-bottom:5px;}
+.modal p{font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:11px;}
+.copy-area{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:8px;font-size:10px;color:var(--t2);margin-bottom:11px;max-height:150px;overflow-y:auto;white-space:pre-wrap;line-height:1.5;font-family:monospace;}
+.mbtns{display:flex;gap:6px;}
+.mmbtn{flex:1;padding:8px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;cursor:pointer;border:none;transition:all .12s;}
+.mmbtn.p{background:var(--pu);color:#fff;}.mmbtn.p:hover{background:var(--pul);}
+.mmbtn.s{background:var(--bg3);color:var(--t2);border:1px solid var(--b);}.mmbtn.s:hover{color:var(--t);}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;gap:8px;text-align:center;}
+.eico{width:46px;height:46px;border-radius:50%;background:var(--bg3);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:3px;}
+.empty h3{font-size:13px;font-weight:500;color:var(--t2);}
+.empty p{font-size:11px;color:var(--t3);max-width:220px;line-height:1.6;}
+
+/* ── CANVA PAGES MODE ── */
+.view-toggle{display:flex;background:var(--bg3);border-radius:6px;padding:2px;gap:1px;}
+.vtab{padding:4px 10px;border-radius:5px;font-size:10px;font-weight:500;color:var(--t2);cursor:pointer;border:none;background:none;transition:all .13s;white-space:nowrap;}
+.vtab.active{background:var(--bg2);color:var(--t);border:1px solid var(--b2);}
+.pages-view{display:none;flex-direction:column;gap:0;max-width:680px;}
+.pages-view.active{display:flex;}
+.page-block{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--b);}
+.page-block:last-child{border-bottom:none;}
+.page-meta{min-width:60px;display:flex;flex-direction:column;align-items:center;gap:3px;padding-top:4px;flex-shrink:0;}
+.page-num{font-size:10px;font-weight:600;color:var(--t3);}
+.page-type-lbl{font-size:9px;color:var(--t3);text-align:center;line-height:1.3;}
+.canva-page{background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;flex:1;position:relative;}
+.canva-page:hover{border-color:var(--b2);}
+.canva-page-badge{position:absolute;top:9px;right:38px;font-size:9px;font-weight:500;padding:2px 6px;border-radius:10px;}
+.cpb-cover{background:rgba(200,169,110,.1);color:var(--ac);border:1px solid rgba(200,169,110,.2);}
+.cpb-special{background:rgba(76,175,125,.1);color:var(--gr);border:1px solid rgba(76,175,125,.2);}
+.cpb-content{background:rgba(91,155,213,.1);color:var(--bl);border:1px solid rgba(91,155,213,.2);}
+.cpb-action{background:rgba(232,135,74,.1);color:var(--or);border:1px solid rgba(232,135,74,.2);}
+.page-copy-btn{position:absolute;top:9px;right:9px;font-size:9px;padding:2px 7px;border-radius:4px;border:1px solid var(--b2);background:var(--bg3);color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;}
+.page-copy-btn:hover{color:var(--t);border-color:var(--b);}
+.canva-page-section{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:6px;}
+.canva-page-title{font-size:13px;font-weight:500;color:var(--t);margin-bottom:5px;line-height:1.3;}
+.canva-page-body{font-size:11px;color:var(--t2);line-height:1.75;}
+.canva-page-body p{margin-bottom:6px;}
+.density-bar{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--b);}
+.density-track{flex:1;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.density-fill{height:100%;border-radius:2px;transition:width .3s;}
+.density-fill.low{background:var(--gr);}
+.density-fill.mid{background:var(--or);}
+.density-fill.high{background:var(--re);}
+.density-lbl{font-size:9px;color:var(--t3);white-space:nowrap;}
+.pages-toolbar{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--b);margin-bottom:4px;}
+.pages-count{font-size:11px;color:var(--t2);}
+.pages-copy-all{padding:5px 12px;font-size:11px;font-weight:500;border-radius:var(--r);border:1px solid rgba(200,169,110,.3);background:rgba(200,169,110,.08);color:var(--ac);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .13s;}
+.pages-copy-all:hover{background:rgba(200,169,110,.15);}
+.page-kp{display:flex;gap:6px;font-size:11px;color:var(--t2);padding:2px 0;}
+.page-kp::before{content:'→';color:var(--ac);flex-shrink:0;}
+.page-cl{display:flex;gap:6px;font-size:11px;color:var(--t2);padding:2px 0;}
+.page-cl-box{width:12px;height:12px;border:1px solid var(--b2);border-radius:3px;flex-shrink:0;margin-top:2px;}
+.page-action{background:rgba(76,175,125,.06);border:1px solid rgba(76,175,125,.15);border-radius:var(--r);padding:7px 10px;font-size:11px;color:var(--gr);}
+.page-rm-day{display:flex;gap:8px;font-size:11px;color:var(--t2);padding:3px 0;}
+.page-rm-day-lbl{font-size:10px;color:var(--t3);min-width:36px;flex-shrink:0;}
+.page-tool{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--b);font-size:11px;color:var(--t2);}
+.page-tool:last-child{border-bottom:none;}
+.page-tool-ico{font-size:13px;flex-shrink:0;}
+.page-tool-name{font-weight:500;color:var(--t);margin-bottom:1px;font-size:11px;}
+.page-gl-term{font-size:11px;font-weight:600;color:var(--ac);margin-bottom:2px;}
+.page-gl-def{font-size:11px;color:var(--t2);line-height:1.6;}
+.page-gl-item{padding:5px 0;border-bottom:1px solid var(--b);}
+.page-gl-item:last-child{border-bottom:none;}
+.no-pages{text-align:center;padding:30px;color:var(--t3);font-size:11px;line-height:1.7;}
+
+/* TOAST */
+.toast{position:fixed;bottom:14px;right:14px;background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r);padding:8px 12px;font-size:11px;color:var(--t);z-index:400;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;}
+.toast.show{opacity:1;transform:none;}
+.toast.ok{border-color:rgba(76,175,125,.3);}
+.toast.err{border-color:rgba(224,92,92,.3);}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">ILG Studio <span>E-book Generator</span> <span class="v">v6</span></div>
+  <div class="nav">
+    <button class="ntab active" onclick="showPanel('gen')">Générateur</button>
+    <button class="ntab" onclick="showPanel('mkt')">Marketing</button>
+    <button class="ntab" onclick="showPanel('lib')">Bibliothèque</button>
+    <button class="ntab" onclick="showPanel('sim')">Revenus</button>
+    <button class="ntab" onclick="showPanel('kb')">Catalogue</button>
+    <button class="ntab" onclick="showPanel('trends')">Idées</button>
+  </div>
+  <div class="topbar-r"><div class="dot"></div><div class="dot-lbl">IA connectée</div></div>
+</div>
+
+<div class="main">
+  <!-- LEFT CONFIG -->
+  <div class="panel-l" id="panel-l">
+    <div class="ph"><div class="ph-t">Paramètres du guide</div></div>
+    <div class="pb">
+      <div class="field">
+        <label>Mode</label>
+        <div class="mode-row">
+          <button class="mbtn active" data-mode="plan" onclick="setMode('plan')">Plan<small>Points clés</small></button>
+          <button class="mbtn" data-mode="full" onclick="setMode('full')">Complet<small>Rédigé</small></button>
+        </div>
+      </div>
+      <div class="field"><label>Titre</label><input type="text" id="f-title" placeholder="Ex : Google Ads Express — Lancez en 1h"/></div>
+      <div class="field">
+        <label>Thématique</label>
+        <div class="chips" id="chips">
+          <div class="chip active" data-val="Business & Entrepreneuriat">Business</div>
+          <div class="chip" data-val="Marketing Digital">Marketing</div>
+          <div class="chip" data-val="Intelligence Artificielle">IA</div>
+          <div class="chip" data-val="Développement Personnel">Dev. Perso</div>
+          <div class="chip" data-val="Santé & Bien-être">Santé</div>
+          <div class="chip" data-val="Finance & Investissement">Finance</div>
+          <div class="chip" data-val="Lifestyle & Loisirs">Lifestyle</div>
+          <div class="chip" data-val="Tech & Innovation">Tech</div>
+          <div class="chip" data-val="Freelancing & Productivité">Freelance</div>
+        </div>
+      </div>
+      <div class="field"><label>Public cible</label>
+        <select id="f-audience">
+          <option value="débutant complet">Débutant complet</option>
+          <option value="bases déjà là">Bases déjà là</option>
+          <option value="professionnel intermédiaire">Professionnel intermédiaire</option>
+          <option value="entrepreneur actif">Entrepreneur actif</option>
+        </select>
+      </div>
+      <div class="field"><label>Objectif du lecteur</label><textarea id="f-goal" placeholder="Ce que le lecteur veut accomplir..."></textarea></div>
+      <div class="field"><label>Chapitres</label>
+        <div class="row4">
+          <div class="rbtn cnt" data-n="5">5<small>Court</small></div>
+          <div class="rbtn cnt active" data-n="7">7<small>Standard</small></div>
+          <div class="rbtn cnt" data-n="10">10<small>Complet</small></div>
+        </div>
+      </div>
+      <div class="field"><label>Langue</label>
+        <div class="row4">
+          <div class="rbtn lang active" data-lang="français">🇫🇷 FR</div>
+          <div class="rbtn lang" data-lang="anglais">🇬🇧 EN</div>
+          <div class="rbtn lang" data-lang="espagnol">🇪🇸 ES</div>
+          <div class="rbtn lang" data-lang="portugais">🇵🇹 PT</div>
+        </div>
+      </div>
+
+      <!-- SECTION TOGGLES -->
+      <div class="field">
+        <label>Sections à inclure</label>
+        <div class="sec-group">
+          <div class="sec-group-title">Avant le contenu — fixe</div>
+          <div class="sec-toggle fixed"><input type="checkbox" checked disabled><div class="sec-toggle-label">Couverture<small>Toujours inclus</small></div></div>
+          <div class="sec-toggle fixed"><input type="checkbox" checked disabled><div class="sec-toggle-label">Copyright & droits<small>Auto-généré</small></div></div>
+          <div class="sec-toggle fixed"><input type="checkbox" checked disabled><div class="sec-toggle-label">À propos — ILG<small>Marque fixe</small></div></div>
+          <div class="sec-toggle fixed"><input type="checkbox" checked disabled><div class="sec-toggle-label">Sommaire<small>Généré automatiquement</small></div></div>
+        </div>
+        <div class="sec-group" style="margin-top:6px;">
+          <div class="sec-group-title">Sections optionnelles — Étape 2</div>
+          <div class="sec-toggle"><input type="checkbox" id="s-avantpropos" checked><div class="sec-toggle-label">Avant-propos<small>Mot de l'auteur & contexte</small></div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-prerequis" checked><div class="sec-toggle-label">Prérequis & avertissements</div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-howto" checked><div class="sec-toggle-label">Comment utiliser ce guide</div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-resultats" checked><div class="sec-toggle-label">Résultats attendus<small>J+7 / J+30 / J+90</small></div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-roadmap" checked><div class="sec-toggle-label">Roadmap 30 jours<small>Plan d'action progressif</small></div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-outils" checked><div class="sec-toggle-label">Outils & ressources</div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-glossaire" checked><div class="sec-toggle-label">Glossaire des termes clés</div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-liens"><div class="sec-toggle-label">Liens utiles regroupés</div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-notes" checked><div class="sec-toggle-label">Pages notes & espace de travail</div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-bonus" checked><div class="sec-toggle-label">Bonus & ressources</div></div>
+          <div class="sec-toggle"><input type="checkbox" id="s-garantie" checked><div class="sec-toggle-label">Garantie satisfaction</div></div>
+        </div>
+      </div>
+
+      <button class="gen-btn" id="gen-btn" onclick="generate()">✦ Étape 1 — Générer l'e-book</button>
+      <button class="enrich-btn" id="enrich-btn" onclick="enrich()">✦ Étape 2 — Enrichir les sections</button>
+    </div>
+    <div class="prog-wrap" id="prog-wrap" style="display:none;">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="prog-lbl" id="prog-lbl">Initialisation...</div>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="panel-r" id="panel-gen">
+    <div class="phead">
+      <div class="phead-lbl" id="phead-lbl">Aperçu e-book</div>
+      <div class="view-toggle">
+        <button class="vtab active" onclick="setView('preview')">Aperçu</button>
+        <button class="vtab" onclick="setView('pages')" id="vtab-pages">Pages Canva</button>
+      </div>
+      <div class="ebts">
+        <button class="ebt" id="btn-save" onclick="saveToLibrary()" disabled>💾 Sauvegarder</button>
+        <button class="ebt" id="btn-md" onclick="copyMd()" disabled>Markdown</button>
+        <button class="ebt cv" id="btn-canva" onclick="openCanvaModal()" disabled>→ Canva</button>
+      </div>
+    </div>
+    <div class="pbody" id="preview-body">
+      <div class="empty"><div class="eico">📖</div><h3>Aucun e-book généré</h3><p>Configure les paramètres et clique sur Étape 1 pour générer.</p></div>
+    </div>
+    <div class="pbody" id="pages-body" style="display:none;"></div>
+  </div>
+
+  <!-- MARKETING -->
+  <div class="gp" id="panel-mkt">
+    <div class="gp-head"><h2>Outils Marketing</h2><span>Généré depuis ton e-book</span></div>
+    <div id="mkt-no-eb" class="mkt-no-eb">
+      <div class="eico">🚀</div>
+      <h3 style="font-size:13px;font-weight:500;color:var(--t2);">Génère un e-book d'abord</h3>
+      <p>Retourne dans le Générateur, crée un e-book, puis reviens ici.</p>
+    </div>
+    <div id="mkt-tools" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+      <div class="mkt-tnav">
+        <button class="mkt-tt sh active" onclick="setMkt('sh')">🛒 Shopify</button>
+        <button class="mkt-tt se" onclick="setMkt('se')">📈 SEO</button>
+        <button class="mkt-tt so" onclick="setMkt('so')">📱 Social</button>
+        <button class="mkt-tt qu" onclick="setMkt('qu')">🎯 Quiz</button>
+        <button class="mkt-tt rs" onclick="setMkt('rs')">📄 Résumé</button>
+        <button class="mkt-tt vi" onclick="setMkt('vi')">🎨 Prompts visuels</button>
+      </div>
+      <div class="mkt-body" id="mkt-body"></div>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div class="gp" id="panel-lib">
+    <div class="gp-head"><h2>Bibliothèque</h2><span id="lib-count">0 guide(s)</span></div>
+    <div class="gp-body" id="lib-body"><div class="lib-empty">Aucun e-book sauvegardé.<br>Génère un guide et clique sur "Sauvegarder".</div></div>
+  </div>
+
+  <!-- REVENUE SIM -->
+  <div class="gp" id="panel-sim">
+    <div class="gp-head"><h2>Simulateur de revenus</h2><span>Projections mensuelle & annuelle</span></div>
+    <div class="gp-body">
+      <div style="display:flex;gap:5px;margin-bottom:14px;">
+        <div class="sc-tab active" onclick="setScenario('real')">Réaliste</div>
+        <div class="sc-tab" onclick="setScenario('opt')">Optimiste</div>
+        <div class="sc-tab" onclick="setScenario('ambi')">Ambitieux</div>
+      </div>
+      <div class="sim-grid">
+        <div class="sim-card"><div class="sim-label">Revenu mensuel</div><div class="sim-val" id="sim-monthly">0 €</div><div class="sim-sub" id="sim-monthly-sub">—</div></div>
+        <div class="sim-card"><div class="sim-label">Revenu annuel</div><div class="sim-val" id="sim-annual">0 €</div><div class="sim-sub" id="sim-annual-sub">—</div></div>
+        <div class="sim-card"><div class="sim-label">Guides actifs</div><div class="sim-val" id="sim-guides">0</div><div class="sim-sub">dans ton catalogue</div></div>
+        <div class="sim-card"><div class="sim-label">Ventes / mois</div><div class="sim-val" id="sim-sales">0</div><div class="sim-sub">toutes thématiques</div></div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:16px;margin-bottom:14px;">
+        <div style="margin-bottom:11px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:5px;">Nombre de guides <span id="v-guides" style="color:var(--ac);font-weight:500;">5</span></div><input type="range" min="1" max="50" value="5" step="1" id="sl-guides" oninput="updateSim()" style="width:100%;accent-color:var(--ac);"></div>
+        <div style="margin-bottom:11px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:5px;">Prix moyen par guide <span id="v-price" style="color:var(--ac);font-weight:500;">14 €</span></div><input type="range" min="5" max="49" value="14" step="1" id="sl-price" oninput="updateSim()" style="width:100%;accent-color:var(--ac);"></div>
+        <div style="margin-bottom:11px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:5px;">Ventes / guide / mois <span id="v-sales" style="color:var(--ac);font-weight:500;">8</span></div><input type="range" min="1" max="100" value="8" step="1" id="sl-sales" oninput="updateSim()" style="width:100%;accent-color:var(--ac);"></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:5px;">Croissance mensuelle <span id="v-growth" style="color:var(--ac);font-weight:500;">10 %</span></div><input type="range" min="0" max="50" value="10" step="1" id="sl-growth" oninput="updateSim()" style="width:100%;accent-color:var(--ac);"></div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:12px 14px;">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:9px;">Projection 12 mois</div>
+        <table class="proj-table" id="proj-table"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- KANBAN -->
+  <div class="gp" id="panel-kb">
+    <div class="gp-head"><h2>Planificateur de catalogue</h2><span>Glisse les cartes entre colonnes</span></div>
+    <div class="gp-body" style="overflow-x:auto;">
+      <div class="kanban">
+        <div class="kb-col" ondragover="allowDrop(event)" ondrop="drop(event,'idea')">
+          <div class="kb-col-head"><span class="kb-col-title idea">💡 Idées</span><span class="kb-count" id="cnt-idea">0</span></div>
+          <div class="kb-cards" id="cards-idea"></div>
+          <div class="kb-add-btn" onclick="showKbInput('idea')">+ Ajouter</div>
+          <div class="kb-input-row" id="kb-input-idea" style="display:none;"><input class="kb-input" id="kb-text-idea" placeholder="Titre..." onkeydown="if(event.key==='Enter')saveKbCard('idea')"><button class="kb-save" onclick="saveKbCard('idea')">OK</button><button class="kb-cancel" onclick="hideKbInput('idea')">✕</button></div>
+        </div>
+        <div class="kb-col" ondragover="allowDrop(event)" ondrop="drop(event,'wip')">
+          <div class="kb-col-head"><span class="kb-col-title wip">✍️ En cours</span><span class="kb-count" id="cnt-wip">0</span></div>
+          <div class="kb-cards" id="cards-wip"></div>
+          <div class="kb-add-btn" onclick="showKbInput('wip')">+ Ajouter</div>
+          <div class="kb-input-row" id="kb-input-wip" style="display:none;"><input class="kb-input" id="kb-text-wip" placeholder="Titre..." onkeydown="if(event.key==='Enter')saveKbCard('wip')"><button class="kb-save" onclick="saveKbCard('wip')">OK</button><button class="kb-cancel" onclick="hideKbInput('wip')">✕</button></div>
+        </div>
+        <div class="kb-col" ondragover="allowDrop(event)" ondrop="drop(event,'done')">
+          <div class="kb-col-head"><span class="kb-col-title done">✅ Terminé</span><span class="kb-count" id="cnt-done">0</span></div>
+          <div class="kb-cards" id="cards-done"></div>
+          <div class="kb-add-btn" onclick="showKbInput('done')">+ Ajouter</div>
+          <div class="kb-input-row" id="kb-input-done" style="display:none;"><input class="kb-input" id="kb-text-done" placeholder="Titre..." onkeydown="if(event.key==='Enter')saveKbCard('done')"><button class="kb-save" onclick="saveKbCard('done')">OK</button><button class="kb-cancel" onclick="hideKbInput('done')">✕</button></div>
+        </div>
+        <div class="kb-col" ondragover="allowDrop(event)" ondrop="drop(event,'pub')">
+          <div class="kb-col-head"><span class="kb-col-title pub">🚀 Publié</span><span class="kb-count" id="cnt-pub">0</span></div>
+          <div class="kb-cards" id="cards-pub"></div>
+          <div class="kb-add-btn" onclick="showKbInput('pub')">+ Ajouter</div>
+          <div class="kb-input-row" id="kb-input-pub" style="display:none;"><input class="kb-input" id="kb-text-pub" placeholder="Titre..." onkeydown="if(event.key==='Enter')saveKbCard('pub')"><button class="kb-save" onclick="saveKbCard('pub')">OK</button><button class="kb-cancel" onclick="hideKbInput('pub')">✕</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRENDS -->
+  <div class="gp" id="panel-trends">
+    <div class="gp-head"><h2>Idées tendance</h2><span>Analyse IA du marché 2025</span></div>
+    <div class="gp-body">
+      <div style="display:flex;gap:7px;margin-bottom:12px;">
+        <input type="text" id="tr-q" placeholder="Ex : IA, freelance, nutrition..." style="flex:1;font-family:'DM Sans',sans-serif;font-size:12px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);color:var(--t);padding:7px 10px;outline:none;">
+        <button onclick="searchTrends()" id="tr-btn" style="padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;background:linear-gradient(135deg,#c8a96e,#e8c98e);color:#1a1500;border:none;border-radius:var(--r);cursor:pointer;">Rechercher</button>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;" id="tr-cats">
+        <div class="chip active" data-cat="">Toutes</div>
+        <div class="chip" data-cat="business">Business</div>
+        <div class="chip" data-cat="intelligence artificielle">IA</div>
+        <div class="chip" data-cat="santé bien-être">Santé</div>
+        <div class="chip" data-cat="finance">Finance</div>
+        <div class="chip" data-cat="lifestyle">Lifestyle</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="ideas-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--t3);font-size:11px;line-height:1.7;">Lance une recherche ou clique sur une catégorie.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CANVA MODAL -->
+<div class="mov" id="canva-modal">
+  <div class="modal">
+    <h2>Exporter → Canva / Adobe</h2>
+    <p>Copie ce contenu structuré dans ton template.</p>
+    <div class="copy-area" id="canva-content"></div>
+    <div class="mbtns">
+      <button class="mmbtn s" onclick="closeModal('canva-modal')">Fermer</button>
+      <button class="mmbtn p" onclick="copyCanvaContent()">📋 Copier tout</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══ STATE ═══
+let selTheme='Business & Entrepreneuriat',selLang='français',selChapters=7,selMode='plan';
+let ebookData=null,enrichData=null,mktTool='sh';
+let kbCards=JSON.parse(localStorage.getItem('ilg_kb')||'{"idea":[],"wip":[],"done":[],"pub":[]}');
+let library=JSON.parse(localStorage.getItem('ilg_lib')||'[]');
+let dragId=null;
+
+// ═══ NAV ═══
+function showPanel(p){
+  ['gen','mkt','lib','sim','kb','trends'].forEach((id,i)=>{
+    const el=document.getElementById('panel-'+id);
+    if(id==='gen') el.style.display=(p===id?'flex':'none');
+    else el.classList.toggle('active',p===id);
+    document.querySelectorAll('.ntab')[i].classList.toggle('active',p===id);
+  });
+  if(p==='mkt') refreshMkt();
+  if(p==='lib') renderLib();
+  if(p==='sim') updateSim();
+  if(p==='kb') renderKb();
+}
+function setMode(m){selMode=m;document.querySelectorAll('.mbtn[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));}
+document.querySelectorAll('.chip[data-val]').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('.chip[data-val]').forEach(x=>x.classList.remove('active'));c.classList.add('active');selTheme=c.dataset.val;}));
+document.querySelectorAll('.rbtn.lang').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.rbtn.lang').forEach(x=>x.classList.remove('active'));b.classList.add('active');selLang=b.dataset.lang;}));
+document.querySelectorAll('.rbtn.cnt').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.rbtn.cnt').forEach(x=>x.classList.remove('active'));b.classList.add('active');selChapters=parseInt(b.dataset.n);}));
+document.querySelectorAll('#tr-cats .chip').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('#tr-cats .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');if(c.dataset.cat){document.getElementById('tr-q').value=c.dataset.cat;searchTrends();}}));
+function setProg(pct,lbl){document.getElementById('prog-fill').style.width=pct+'%';document.getElementById('prog-lbl').textContent=lbl;}
+function getSectionToggles(){
+  return {avantpropos:document.getElementById('s-avantpropos').checked,prerequis:document.getElementById('s-prerequis').checked,howto:document.getElementById('s-howto').checked,resultats:document.getElementById('s-resultats').checked,roadmap:document.getElementById('s-roadmap').checked,outils:document.getElementById('s-outils').checked,glossaire:document.getElementById('s-glossaire').checked,liens:document.getElementById('s-liens').checked,notes:document.getElementById('s-notes').checked,bonus:document.getElementById('s-bonus').checked,garantie:document.getElementById('s-garantie').checked};
+}
+
+// ═══ STEP 1 — GENERATE ═══
+async function generate(){
+  const title=document.getElementById('f-title').value.trim();
+  const audience=document.getElementById('f-audience').value;
+  const goal=document.getElementById('f-goal').value.trim();
+  if(!title){showToast("Merci d'entrer un titre.",'err');return;}
+  const btn=document.getElementById('gen-btn');
+  btn.disabled=true;enrichData=null;
+  document.getElementById('prog-wrap').style.display='block';
+  setProg(5,'Étape 1 — Génération des chapitres...');
+  showSkeleton();
+  document.getElementById('phead-lbl').textContent='Aperçu e-book — Étape 1/2';
+  const isFull=selMode==='full';
+  const steps=isFull?[[15,'Structuration...'],[35,'Rédaction...'],[55,'Exemples...'],[75,'Sources...'],[90,'Finalisation...']]:[[20,'Structuration...'],[55,'Chapitres...'],[82,'Checklist...']];
+  let si=0;const ticker=setInterval(()=>{if(si<steps.length){setProg(...steps[si]);si++;}},isFull?1700:900);
+  const pS='{"titre":"...","sous_titre":"...","intro":"...","pages_estimees":30,"temps_lecture":"X-Y min","niveau":"Débutant","chapitres":[{"numero":1,"titre":"...","resume":"...","points_cles":["..."],"action":"..."}],"checklist_finale":["..."],"sources":[{"titre":"...","auteur":"...","annee":"2024","type":"Livre","url":"https://..."}],"cta":"..."}';
+  const fS='{"titre":"...","sous_titre":"...","intro":"...","pages_estimees":45,"temps_lecture":"X-Y min","niveau":"Débutant","chapitres":[{"numero":1,"titre":"...","intro_chapitre":"...","sections":[{"titre_section":"...","contenu":"200-300 mots","exemple":"...","erreur":"..."}],"checklist_chapitre":["..."],"action":"..."}],"checklist_finale":["..."],"sources":[{"titre":"...","auteur":"...","annee":"2024","type":"Étude","url":"https://..."}],"cta":"..."}';
+  const msg='Cree un e-book pratique. Titre:'+title+'. Theme:'+selTheme+'. Public:'+audience+'. Objectif:'+(goal||'apprendre rapidement')+'. Langue:'+selLang+'. Chapitres:'+selChapters+'.'+(isFull?' Chaque chapitre: 2-3 sections reDigees 200-300 mots, exemples concrets, erreurs a eviter, checklist.':'')+' Sources: 5-8 credibles. JSON exact: '+(isFull?fS:pS);
+  try{
+    const res=await fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:isFull?8000:3500,system:'Expert guides pedagogiques Instant Learning Guide. Reponds en '+selLang+'. JSON valide uniquement, sans backticks, sans texte avant ou apres.',messages:[{role:'user',content:msg}]})});
+    clearInterval(ticker);setProg(95,'Mise en forme...');
+    const data=await res.json();
+    if(data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+    if(!data.content||!Array.isArray(data.content)) throw new Error('Reponse invalide: '+JSON.stringify(data).slice(0,200));
+    const raw=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    ebookData=JSON.parse(raw.replace(/```json/g,'').replace(/```/g,'').trim());
+    ebookData._mode=selMode;ebookData._theme=selTheme;
+    ebookData._lang=({français:'FR',anglais:'EN',espagnol:'ES',portugais:'PT'})[selLang]||'FR';
+    ebookData._date=new Date().toLocaleDateString('fr-FR');
+    ebookData._lang_full=selLang;
+    setTimeout(()=>{
+      renderFullPreview();
+      setProg(100,'Étape 1 terminée !');
+      setTimeout(()=>{document.getElementById('prog-wrap').style.display='none';btn.disabled=false;},500);
+      enableExports();
+      document.getElementById('enrich-btn').style.display='block';
+      document.getElementById('phead-lbl').textContent='Aperçu e-book — Étape 1 ✓ (Étape 2 disponible)';
+      showToast('Étape 1 terminée ! Lance l\'Étape 2 pour enrichir.','ok');
+    },300);
+  }catch(err){clearInterval(ticker);document.getElementById('prog-wrap').style.display='none';btn.disabled=false;showToast('Erreur: '+err.message,'err');showEmpty();console.error(err);}
+}
+
+// ═══ STEP 2 — ENRICH ═══
+async function enrich(){
+  if(!ebookData){showToast('Lance d\'abord l\'Étape 1.','err');return;}
+  const toggles=getSectionToggles();
+  const selected=Object.keys(toggles).filter(k=>toggles[k]);
+  if(!selected.length){showToast('Sélectionne au moins une section.','err');return;}
+  const btn=document.getElementById('enrich-btn');
+  btn.disabled=true;
+  document.getElementById('prog-wrap').style.display='block';
+  setProg(5,'Étape 2 — Génération des sections...');
+  document.getElementById('phead-lbl').textContent='Enrichissement en cours...';
+  const steps=[[20,'Avant-propos & prérequis...'],[40,'Roadmap 30 jours...'],[60,'Outils & glossaire...'],[80,'Bonus & garantie...'],[92,'Assemblage...']];
+  let si=0;const ticker=setInterval(()=>{if(si<steps.length){setProg(...steps[si]);si++;}},1400);
+  const d=ebookData;
+  const chapitresTitres=d.chapitres.map(c=>c.titre).join(', ');
+  const msg='Genere les sections complementaires pour l\'e-book "'+d.titre+'" sur la thematique "'+d._theme+'" destine a un public "'+d.niveau+'" en '+d._lang_full+'. Sections demandees: '+selected.join(', ')+'. JSON exact:\n{\n'+(toggles.avantpropos?'"avant_propos":"texte 120-150 mots, chaleureux, donne envie de lire, signe Instant Learning Guide",\n':'')+( toggles.prerequis?'"prerequis":["prerequis 1","prerequis 2","prerequis 3"],"avertissements":"texte court 60-80 mots",\n':'')+( toggles.howto?'"comment_utiliser":"texte 80-100 mots expliquant comment lire et utiliser ce guide efficacement",\n':'')+( toggles.resultats?'"resultats_attendus":{"j7":["resultat 1","resultat 2","resultat 3"],"j30":["resultat 1","resultat 2","resultat 3"],"j90":["resultat 1","resultat 2","resultat 3"]},\n':'')+( toggles.roadmap?'"roadmap_30j":[{"semaine":1,"titre":"titre semaine","jours":[{"jour":"J1","tache":"tache precise"},{"jour":"J3","tache":"tache"},{"jour":"J5","tache":"tache"},{"jour":"J7","tache":"tache"}]},{"semaine":2,"titre":"...","jours":[{"jour":"J8","tache":"..."},{"jour":"J10","tache":"..."},{"jour":"J14","tache":"..."}]},{"semaine":3,"titre":"...","jours":[{"jour":"J15","tache":"..."},{"jour":"J18","tache":"..."},{"jour":"J21","tache":"..."}]},{"semaine":4,"titre":"...","jours":[{"jour":"J22","tache":"..."},{"jour":"J26","tache":"..."},{"jour":"J30","tache":"bilan et prochaine etape"}]}],\n':'')+( toggles.outils?'"outils":[{"nom":"nom outil","emoji":"emoji","description":"courte description","lien":"https://..."},{"nom":"...","emoji":"...","description":"...","lien":"..."},{"nom":"...","emoji":"...","description":"...","lien":"..."},{"nom":"...","emoji":"...","description":"...","lien":"..."},{"nom":"...","emoji":"...","description":"...","lien":"..."}],\n':'')+( toggles.glossaire?'"glossaire":[{"terme":"terme cle 1","definition":"definition claire et simple"},{"terme":"terme 2","definition":"..."},{"terme":"terme 3","definition":"..."},{"terme":"terme 4","definition":"..."},{"terme":"terme 5","definition":"..."},{"terme":"terme 6","definition":"..."}],\n':'')+( toggles.liens?'"liens_utiles":[{"titre":"titre ressource","url":"https://...","description":"pourquoi utile"}],\n':'')+( toggles.bonus?'"bonus":[{"titre":"titre du bonus","type":"PDF | Checklist | Template | Video","description":"description courte du bonus et de sa valeur"},{"titre":"...","type":"...","description":"..."}],\n':'')+( toggles.garantie?'"garantie":"texte de garantie satisfaction 60-80 mots, rassurant, professionnel",\n':'')+'"_done":true\n}';
+  try{
+    const res=await fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system:'Expert creation de guides educatifs premium. Reponds en '+d._lang_full+'. JSON valide uniquement, sans backticks, sans texte avant ou apres.',messages:[{role:'user',content:msg}]})});
+    clearInterval(ticker);setProg(95,'Assemblage des sections...');
+    const data=await res.json();
+    if(data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+    if(!data.content||!Array.isArray(data.content)) throw new Error('Reponse invalide: '+JSON.stringify(data).slice(0,200));
+    const raw=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    enrichData=JSON.parse(raw.replace(/```json/g,'').replace(/```/g,'').trim());
+    setTimeout(()=>{
+      renderFullPreview();
+      setProg(100,'E-book complet !');
+      setTimeout(()=>{document.getElementById('prog-wrap').style.display='none';btn.disabled=false;},500);
+      document.getElementById('phead-lbl').textContent='Aperçu e-book complet — 20 sections ✓';
+      showToast('E-book enrichi ! Toutes les sections sont prêtes.','ok');if(currentView==='pages') renderPagesView();
+    },300);
+  }catch(err){clearInterval(ticker);document.getElementById('prog-wrap').style.display='none';btn.disabled=false;showToast('Erreur Étape 2: '+err.message,'err');console.error(err);}
+}
+
+// ═══ RENDER FULL PREVIEW ═══
+function showSkeleton(){document.getElementById('preview-body').innerHTML='<div style="max-width:640px;"><div class="sk" style="height:150px;margin-bottom:14px;border-radius:14px;"></div><div class="sk" style="height:10px;width:50%;margin-bottom:7px;"></div><div class="sk" style="height:55px;margin-bottom:14px;"></div>'+[1,2,3,4].map(()=>'<div class="sk" style="height:40px;margin-bottom:5px;border-radius:9px;"></div>').join('')+'</div>';}
+function showEmpty(){document.getElementById('preview-body').innerHTML='<div class="empty"><div class="eico">📖</div><h3>Aucun e-book généré</h3><p>Configure les paramètres et clique sur Étape 1 pour générer.</p></div>';}
+
+function secHead(num,title){return '<div class="eb-sec-hd"><span class="sec-num">'+num+'</span>'+title+'</div>';}
+
+function renderFullPreview(){
+  const d=ebookData; if(!d) return;
+  const e=enrichData||{};
+  const isFull=d._mode==='full';
+  const body=document.getElementById('preview-body');
+  body.innerHTML='';
+  const wrap=document.createElement('div');wrap.className='ebook-wrap';
+  let html='';
+
+  // 01 COVER
+  const mbl=isFull?'<span class="mbadge full">Complet</span>':'<span class="mbadge plan">Plan</span>';
+  html+='<div class="ebook-cover"><div class="ctag">'+d._theme+' · '+d._lang+(enrichData?' · Enrichi':'')+'</div><div class="cttl">'+d.titre+'</div><div class="csub">'+(d.sous_titre||'')+'</div><div class="cmeta"><div class="cmi"><label>Pages</label><div class="val">'+d.pages_estimees+'</div></div><div class="cmi"><label>Lecture</label><div class="val">'+d.temps_lecture+'</div></div><div class="cmi"><label>Niveau</label><div class="val">'+(d.niveau||'Débutant')+'</div></div><div class="cmi"><label>Chapitres</label><div class="val">'+d.chapitres.length+'</div></div>'+(enrichData?'<div class="cmi"><label>Sections</label><div class="val">20</div></div>':'')+'</div></div>';
+
+  // 02 COPYRIGHT
+  html+='<div class="eb-section">'+secHead('02','Droits & Copyright')+'<div class="copyright-card">© 2025 Instant Learning Guide. Tous droits réservés.<br>Ce guide est protégé par les lois sur la propriété intellectuelle. Toute reproduction, distribution ou transmission, sous quelque forme que ce soit, est strictement interdite sans autorisation préalable écrite d\'Instant Learning Guide.<br><br>instantlearningguide.com</div></div>';
+
+  // 03 À PROPOS ILG
+  html+='<div class="eb-section">'+secHead('03','À propos — Instant Learning Guide')+'<div class="eb-card"><h4>Notre mission</h4><p>Instant Learning Guide est une plateforme dédiée à l\'apprentissage rapide et pratique. Nous créons des guides conçus pour transmettre l\'essentiel en un minimum de temps, sans jargon, avec des étapes immédiatement applicables.</p><p>Nos guides sont disponibles en 4 langues et couvrent des thématiques variées : business, marketing digital, intelligence artificielle, développement personnel, santé, finance et bien plus.</p><p style="font-size:10px;color:var(--t3);">instantlearningguide.com · contact@instantlearningguide.com</p></div></div>';
+
+  // 04 AVANT-PROPOS
+  if(e.avant_propos){html+='<div class="eb-section">'+secHead('04','Avant-propos')+'<div class="eb-card accent" style="font-style:italic;">'+e.avant_propos+'</div></div>';}
+
+  // 05 PRÉREQUIS
+  if(e.prerequis||e.avertissements){
+    html+='<div class="eb-section">'+secHead('05','Prérequis & Avertissements');
+    if(e.prerequis) html+='<div class="eb-card" style="margin-bottom:8px;"><h4>Ce dont tu as besoin</h4>'+(e.prerequis||[]).map(p=>'<div style="display:flex;gap:7px;font-size:11px;color:var(--t2);padding:3px 0;"><span style="color:var(--gr);">✓</span><span>'+p+'</span></div>').join('')+'</div>';
+    if(e.avertissements) html+='<div class="eb-card" style="border-color:rgba(232,135,74,.2);"><h4 style="color:var(--or);">⚠ À savoir avant de commencer</h4><p>'+e.avertissements+'</p></div>';
+    html+='</div>';
+  }
+
+  // 06 COMMENT UTILISER
+  if(e.comment_utiliser){html+='<div class="eb-section">'+secHead('06','Comment utiliser ce guide')+'<div class="eb-card">'+e.comment_utiliser+'</div></div>';}
+
+  // 07 SOMMAIRE
+  html+='<div class="eb-section">'+secHead('07','Sommaire')+'<div class="eb-card">';
+  const tocSections=['Introduction',...d.chapitres.map(c=>c.titre),'Checklist finale'];
+  if(e.roadmap_30j) tocSections.push('Roadmap 30 jours');
+  if(e.outils) tocSections.push('Outils & ressources');
+  if(e.glossaire) tocSections.push('Glossaire');
+  tocSections.forEach((t,i)=>{html+='<div class="toc-item"><span class="toc-num">'+(i+1)+'.</span><span class="toc-title">'+t+'</span><span class="toc-dots"></span><span class="toc-page">'+(4+i*2)+'</span></div>';});
+  html+='</div></div>';
+
+  // 08 RÉSULTATS ATTENDUS
+  if(e.resultats_attendus){
+    const r=e.resultats_attendus;
+    html+='<div class="eb-section">'+secHead('08','Résultats attendus')+'<div class="results-grid"><div class="results-col"><div class="results-col-title">J+7</div>'+(r.j7||[]).map(x=>'<div class="results-item">'+x+'</div>').join('')+'</div><div class="results-col"><div class="results-col-title">J+30</div>'+(r.j30||[]).map(x=>'<div class="results-item">'+x+'</div>').join('')+'</div><div class="results-col"><div class="results-col-title">J+90</div>'+(r.j90||[]).map(x=>'<div class="results-item">'+x+'</div>').join('')+'</div></div></div>';
+  }
+
+  // 09 INTRODUCTION
+  html+='<div class="eb-section">'+secHead('09','Introduction')+'<div class="eb-card accent" style="font-style:italic;">'+d.intro+'</div></div>';
+
+  // 10 CHAPITRES
+  html+='<div class="eb-section">'+secHead('10','Chapitres')+'<div id="ch-list"></div></div>';
+
+  // 11 CHECKLIST FINALE
+  if(d.checklist_finale){html+='<div class="eb-section">'+secHead('11','Checklist finale')+'<div class="eb-card"><div class="cl-fin">'+d.checklist_finale.map(s=>'<div class="clf-i"><div class="clf-b">✓</div><span>'+s+'</span></div>').join('')+'</div></div></div>';}
+
+  // 12 ROADMAP
+  if(e.roadmap_30j){
+    html+='<div class="eb-section">'+secHead('12','Roadmap 30 jours')+'<div class="eb-card">';
+    (e.roadmap_30j||[]).forEach(w=>{
+      html+='<div class="roadmap-week"><div class="roadmap-week-title">Semaine '+w.semaine+' — '+w.titre+'</div>';
+      (w.jours||[]).forEach(j=>{html+='<div class="roadmap-day"><span class="roadmap-day-num">'+j.jour+'</span><span class="roadmap-day-task">'+j.tache+'</span></div>';});
+      html+='</div>';
+    });
+    html+='</div></div>';
+  }
+
+  // 13 OUTILS
+  if(e.outils){
+    html+='<div class="eb-section">'+secHead('13','Outils & ressources recommandés')+'<div class="eb-card">';
+    (e.outils||[]).forEach(o=>{html+='<div class="tool-item"><div class="tool-icon">'+( o.emoji||'🔧')+'</div><div><div class="tool-name">'+o.nom+'</div><div class="tool-desc">'+o.description+'</div>'+(o.lien?'<div class="tool-link">'+o.lien+'</div>':'')+'</div></div>';});
+    html+='</div></div>';
+  }
+
+  // 14 GLOSSAIRE
+  if(e.glossaire){
+    html+='<div class="eb-section">'+secHead('14','Glossaire')+'<div class="eb-card">';
+    (e.glossaire||[]).forEach(g=>{html+='<div class="glossary-item"><div class="glossary-term">'+g.terme+'</div><div class="glossary-def">'+g.definition+'</div></div>';});
+    html+='</div></div>';
+  }
+
+  // 15 LIENS UTILES
+  if(e.liens_utiles){
+    html+='<div class="eb-section">'+secHead('15','Liens utiles')+'<div class="eb-card">';
+    (e.liens_utiles||[]).forEach(l=>{html+='<div style="padding:5px 0;border-bottom:1px solid var(--b);"><div style="font-size:11px;font-weight:500;color:var(--t);margin-bottom:2px;">'+l.titre+'</div><div style="font-size:10px;color:var(--bl);">'+l.url+'</div><div style="font-size:10px;color:var(--t3);">'+l.description+'</div></div>';});
+    html+='</div></div>';
+  }
+
+  // 16 NOTES
+  if(document.getElementById('s-notes').checked||enrichData){
+    html+='<div class="eb-section">'+secHead('16','Notes & espace de travail')+'<div class="eb-card"><div class="notes-section"><div class="notes-prompt">Mes apprentissages clés :</div>'+[...Array(4)].map(()=>'<div class="notes-line"></div>').join('')+'<div class="notes-prompt" style="margin-top:14px;">Mes 3 actions prioritaires :</div>'+[...Array(3)].map(()=>'<div class="notes-line"></div>').join('')+'<div class="notes-prompt" style="margin-top:14px;">Questions que je me pose :</div>'+[...Array(3)].map(()=>'<div class="notes-line"></div>').join('')+'</div></div></div>';
+  }
+
+  // 17 SOURCES
+  if(d.sources&&d.sources.length){html+='<div class="eb-section">'+secHead('17','Sources & références')+'<div class="src-block">'+d.sources.map((s,i)=>'<div class="src-item"><div class="src-n">['+(i+1)+']</div><div><div class="src-ttl">'+s.titre+'</div><div class="src-meta">'+s.auteur+' · '+s.annee+' · '+s.type+'</div></div></div>').join('')+'</div></div>';}
+
+  // 18 BONUS
+  if(e.bonus){
+    html+='<div class="eb-section">'+secHead('18','Bonus & ressources inclus');
+    (e.bonus||[]).forEach(b=>{html+='<div class="bonus-item"><span class="bonus-tag">'+b.type+'</span><div><div class="bonus-title">'+b.titre+'</div><div class="bonus-desc">'+b.description+'</div></div></div>';});
+    html+='</div>';
+  }
+
+  // 19 GARANTIE
+  if(e.garantie){html+='<div class="eb-section">'+secHead('19','Garantie satisfaction')+'<div class="guarantee-card"><div class="guarantee-icon">🛡️</div><div class="guarantee-title">Satisfait ou remboursé</div><div class="guarantee-text">'+e.garantie+'</div></div></div>';}
+
+  // 20 CTA
+  if(d.cta){html+='<div class="eb-section">'+secHead('20','Mot de clôture')+'<div class="cta-box"><div class="cta-t">"'+d.cta+'"</div><div style="margin-top:8px;font-size:10px;color:var(--t3);">— Instant Learning Guide</div></div></div>';}
+
+  wrap.innerHTML=html;body.appendChild(wrap);
+
+  // Render chapters
+  const chList=document.getElementById('ch-list');
+  d.chapitres.forEach((ch,i)=>{
+    const div=document.createElement('div');div.className='chi'+(i===0?' open':'');
+    let bh='';
+    if(isFull&&ch.sections){
+      bh='<div>';if(ch.intro_chapitre) bh+='<p style="font-style:italic;margin-bottom:7px;font-size:11px;color:var(--t2);">'+ch.intro_chapitre+'</p>';
+      ch.sections.forEach(s=>{bh+='<h4 style="font-size:11px;font-weight:600;color:var(--t);margin:9px 0 3px;">'+s.titre_section+'</h4><p style="font-size:11px;color:var(--t2);line-height:1.75;margin-bottom:7px;">'+s.contenu+'</p>';if(s.exemple) bh+='<div class="ex-box"><div class="ex-lbl">Exemple</div>'+s.exemple+'</div>';if(s.erreur) bh+='<div class="warn-box">'+s.erreur+'</div>';});
+      bh+='</div>';
+      if(ch.checklist_chapitre) bh+='<div style="margin-top:8px;">'+ch.checklist_chapitre.map(c=>'<div style="font-size:10px;color:var(--t2);padding:2px 0;">✓ '+c+'</div>').join('')+'</div>';
+      bh+='<div class="ch-act" style="margin-top:8px;">⚡ '+ch.action+'</div>';
+    }else{
+      bh='<p style="font-size:11px;color:var(--t2);margin-bottom:8px;">'+ch.resume+'</p><div style="font-size:9px;font-weight:600;letter-spacing:.08em;color:var(--t3);text-transform:uppercase;margin-bottom:5px;">Points clés</div>'+ch.points_cles.map(p=>'<div class="ch-kp">'+p+'</div>').join('')+'<div class="ch-act">⚡ '+ch.action+'</div>';
+    }
+    div.innerHTML='<div class="chh"><div class="chn">'+ch.numero+'</div><div class="cht">'+ch.titre+'</div><div class="cha">▼</div></div><div class="chb">'+bh+'</div>';
+    div.querySelector('.chh').addEventListener('click',()=>div.classList.toggle('open'));
+    chList.appendChild(div);
+  });
+}
+
+function enableExports(){['btn-save','btn-md','btn-canva'].forEach(id=>document.getElementById(id).disabled=false);}
+
+// ═══ VIEW TOGGLE ═══
+let currentView='preview';
+function setView(v){
+  currentView=v;
+  document.querySelectorAll('.vtab').forEach((t,i)=>t.classList.toggle('active',['preview','pages'][i]===v));
+  document.getElementById('preview-body').style.display=v==='preview'?'block':'none';
+  document.getElementById('pages-body').style.display=v==='pages'?'block':'none';
+  if(v==='pages') renderPagesView();
+}
+
+// ═══ PAGES CANVA VIEW ═══
+function wordCount(txt){return (txt||'').split(/\s+/).filter(Boolean).length;}
+function densityClass(w){return w<80?'low':w<150?'mid':'high';}
+function densityPct(w){return Math.min(100,Math.round(w/200*100));}
+function densityLabel(w){return w<80?'Leger':w<150?'Moyen':'Dense';}
+
+function makePageBlock(num,typeLabel,badgeCls,titleSection,titlePage,bodyHtml,words){
+  const dc=densityClass(words);
+  return '<div class="page-block"><div class="page-meta"><div class="page-num">P.'+String(num).padStart(2,'0')+'</div><div class="page-type-lbl">'+typeLabel+'</div></div><div class="canva-page"><span class="canva-page-badge '+badgeCls+'">'+titleSection+'</span><button class="page-copy-btn" onclick="copyPageBlock(this)">Copier</button>'+(titlePage?'<div class="canva-page-title">'+titlePage+'</div>':'')+'<div class="canva-page-body">'+bodyHtml+'</div>'+(words>0?'<div class="density-bar"><div class="density-track"><div class="density-fill '+dc+'" style="width:'+densityPct(words)+'%"></div></div><div class="density-lbl">'+densityLabel(words)+' &middot; '+words+' mots</div></div>':'')+'</div></div>';
+}
+
+function renderPagesView(){
+  const body=document.getElementById('pages-body');
+  if(!ebookData){body.innerHTML='<div class="no-pages">Genere un e-book dabord pour voir le mode Pages Canva.</div>';return;}
+  const d=ebookData;const e=enrichData||{};const isFull=d._mode==='full';
+  let pages=[];let pn=1;let allText=[];
+
+  pages.push(makePageBlock(pn++,'Couverture','cpb-cover','Couverture','','<div style="text-align:center;padding:10px 0;"><div style="font-size:9px;color:var(--t3);margin-bottom:8px;">'+d._theme+' &middot; '+d._lang+' &middot; 2025</div><div style="font-size:16px;font-weight:600;color:var(--t);margin-bottom:5px;line-height:1.3;">'+d.titre+'</div><div style="font-size:11px;color:var(--t2);font-style:italic;margin-bottom:10px;">'+(d.sous_titre||'')+'</div><div style="font-size:9px;color:var(--t3);">Instant Learning Guide</div></div>',0));
+  allText.push('COUVERTURE\n'+d.titre+'\n'+(d.sous_titre||'')+'\nInstant Learning Guide 2025');
+
+  pages.push(makePageBlock(pn++,'Copyright','cpb-special','Droits','','<div style="text-align:center;font-size:10px;color:var(--t3);line-height:1.8;">&copy; 2025 Instant Learning Guide<br>Tous droits reserves.<br>Reproduction interdite.<br><br>instantlearningguide.com</div>',0));
+  allText.push('COPYRIGHT\n© 2025 Instant Learning Guide\nTous droits reserves.\ninstantlearningguide.com');
+
+  const ap='Instant Learning Guide est une plateforme dediee a lapprentissage rapide. Nos guides transmettent lessentiel sans jargon avec des etapes immediatement applicables. Disponibles en 4 langues.';
+  pages.push(makePageBlock(pn++,'A propos','cpb-special','A propos ILG','Instant Learning Guide','<p>'+ap+'</p>',wordCount(ap)));
+  allText.push('A PROPOS\n'+ap);
+
+  if(e.avant_propos){pages.push(makePageBlock(pn++,'Avant-propos','cpb-special','Avant-propos','','<p style="font-style:italic;">'+e.avant_propos+'</p>',wordCount(e.avant_propos)));allText.push('AVANT-PROPOS\n'+e.avant_propos);}
+
+  if(e.prerequis&&e.prerequis.length){
+    const pb=(e.prerequis||[]).map(function(p){return '<div class="page-kp">'+p+'</div>';}).join('')+(e.avertissements?'<div style="margin-top:8px;padding:7px 9px;border-radius:var(--r);border:1px solid rgba(232,135,74,.2);font-size:10px;color:var(--or);">&#9888; '+e.avertissements+'</div>':'');
+    pages.push(makePageBlock(pn++,'Prerequis','cpb-special','Prerequis','Ce dont tu as besoin',pb,wordCount((e.prerequis||[]).join(' '))));
+    allText.push('PREREQUIS\n'+(e.prerequis||[]).map(function(p){return '+ '+p;}).join('\n'));
+  }
+
+  if(e.comment_utiliser){pages.push(makePageBlock(pn++,'Mode emploi','cpb-special','Mode emploi','Comment utiliser ce guide','<p>'+e.comment_utiliser+'</p>',wordCount(e.comment_utiliser)));allText.push('COMMENT UTILISER\n'+e.comment_utiliser);}
+
+  const tocItems=['Introduction'].concat(d.chapitres.map(function(c){return c.titre;})).concat(['Checklist finale']);
+  if(e.roadmap_30j) tocItems.push('Roadmap 30 jours');
+  if(e.outils) tocItems.push('Outils et ressources');
+  if(e.glossaire) tocItems.push('Glossaire');
+  pages.push(makePageBlock(pn++,'Sommaire','cpb-special','Sommaire','Table des matieres',tocItems.map(function(t,i){return '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--b);font-size:11px;color:var(--t2);"><span>'+t+'</span><span style="color:var(--t3);">'+(4+i*3)+'</span></div>';}).join(''),0));
+  allText.push('SOMMAIRE\n'+tocItems.map(function(t,i){return t+' .... '+(4+i*3);}).join('\n'));
+
+  if(e.resultats_attendus){
+    const r=e.resultats_attendus;
+    const rb='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;">'
+      +'<div style="background:var(--bg3);border-radius:var(--r);padding:7px 9px;"><div style="font-size:9px;font-weight:600;color:var(--ac);text-transform:uppercase;margin-bottom:4px;">J+7</div>'+(r.j7||[]).map(function(x){return '<div style="font-size:10px;color:var(--t2);padding:2px 0;">+ '+x+'</div>';}).join('')+'</div>'
+      +'<div style="background:var(--bg3);border-radius:var(--r);padding:7px 9px;"><div style="font-size:9px;font-weight:600;color:var(--ac);text-transform:uppercase;margin-bottom:4px;">J+30</div>'+(r.j30||[]).map(function(x){return '<div style="font-size:10px;color:var(--t2);padding:2px 0;">+ '+x+'</div>';}).join('')+'</div>'
+      +'<div style="background:var(--bg3);border-radius:var(--r);padding:7px 9px;"><div style="font-size:9px;font-weight:600;color:var(--ac);text-transform:uppercase;margin-bottom:4px;">J+90</div>'+(r.j90||[]).map(function(x){return '<div style="font-size:10px;color:var(--t2);padding:2px 0;">+ '+x+'</div>';}).join('')+'</div></div>';
+    pages.push(makePageBlock(pn++,'Resultats','cpb-special','Resultats attendus','Ce que tu vas accomplir',rb,0));
+    allText.push('RESULTATS\nJ+7: '+(r.j7||[]).join(' | ')+'\nJ+30: '+(r.j30||[]).join(' | ')+'\nJ+90: '+(r.j90||[]).join(' | '));
+  }
+
+  pages.push(makePageBlock(pn++,'Introduction','cpb-content','Introduction','','<p style="font-style:italic;">'+d.intro+'</p>',wordCount(d.intro)));
+  allText.push('INTRODUCTION\n'+d.intro);
+
+  d.chapitres.forEach(function(ch){
+    if(isFull&&ch.sections){
+      if(ch.intro_chapitre){
+        pages.push(makePageBlock(pn++,'Ch.'+ch.numero+' Intro','cpb-content','Chapitre '+ch.numero,ch.titre,'<p style="font-style:italic;">'+ch.intro_chapitre+'</p>',wordCount(ch.intro_chapitre)));
+        allText.push('CHAPITRE '+ch.numero+': '+ch.titre+'\n'+ch.intro_chapitre);
+      }
+      (ch.sections||[]).forEach(function(sec,si){
+        var sb='<p>'+sec.contenu+'</p>';
+        if(sec.exemple) sb+='<div style="margin-top:7px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:7px 9px;"><div style="font-size:9px;font-weight:600;color:var(--ac);text-transform:uppercase;margin-bottom:2px;">Exemple</div><div style="font-size:10px;color:var(--t2);">'+sec.exemple+'</div></div>';
+        if(sec.erreur) sb+='<div style="margin-top:5px;background:rgba(224,92,92,.05);border:1px solid rgba(224,92,92,.15);border-radius:var(--r);padding:6px 9px;font-size:10px;color:var(--re);">&#9888; '+sec.erreur+'</div>';
+        pages.push(makePageBlock(pn++,'Ch.'+ch.numero+' '+(si+1)+'/'+(ch.sections.length),'cpb-content','Chapitre '+ch.numero,sec.titre_section,sb,wordCount(sec.contenu)));
+        allText.push('CH.'+ch.numero+' '+sec.titre_section+'\n'+sec.contenu+(sec.exemple?'\nEXEMPLE: '+sec.exemple:'')+(sec.erreur?'\n⚠ '+sec.erreur:''));
+      });
+      if(ch.checklist_chapitre||ch.action){
+        var cb=(ch.checklist_chapitre?'<div style="margin-bottom:9px;">'+(ch.checklist_chapitre||[]).map(function(c){return '<div class="page-cl"><div class="page-cl-box"></div><span>'+c+'</span></div>';}).join('')+'</div>':'')+(ch.action?'<div class="page-action">&#9889; '+ch.action+'</div>':'');
+        pages.push(makePageBlock(pn++,'Ch.'+ch.numero+' Action','cpb-action','Chapitre '+ch.numero+' Action',ch.titre,cb,0));
+        allText.push('CH.'+ch.numero+' ACTION\n'+ch.action);
+      }
+    } else {
+      var pb2='<p style="margin-bottom:9px;">'+ch.resume+'</p><div>'+(ch.points_cles||[]).map(function(p){return '<div class="page-kp">'+p+'</div>';}).join('')+'</div><div class="page-action" style="margin-top:9px;">&#9889; '+ch.action+'</div>';
+      pages.push(makePageBlock(pn++,'Chapitre '+ch.numero,'cpb-content','Chapitre '+ch.numero,ch.titre,pb2,wordCount(ch.resume)));
+      allText.push('CHAPITRE '+ch.numero+': '+ch.titre+'\n'+ch.resume+'\n'+(ch.points_cles||[]).map(function(p){return '→ '+p;}).join('\n')+'\nACTION: '+ch.action);
+    }
+  });
+
+  if(d.checklist_finale&&d.checklist_finale.length){
+    pages.push(makePageBlock(pn++,'Checklist','cpb-special','Checklist finale','Tout ce que tu dois avoir fait',d.checklist_finale.map(function(s){return '<div class="page-cl"><div class="page-cl-box"></div><span>'+s+'</span></div>';}).join(''),0));
+    allText.push('CHECKLIST FINALE\n'+d.checklist_finale.map(function(s){return '☐ '+s;}).join('\n'));
+  }
+
+  if(e.roadmap_30j){
+    (e.roadmap_30j||[]).forEach(function(w){
+      var rb='<div style="font-size:9px;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;">'+w.titre+'</div>'+(w.jours||[]).map(function(j){return '<div class="page-rm-day"><span class="page-rm-day-lbl">'+j.jour+'</span><span>'+j.tache+'</span></div>';}).join('');
+      pages.push(makePageBlock(pn++,'Roadmap S'+w.semaine,'cpb-special','Roadmap 30 jours','Semaine '+w.semaine,rb,0));
+      allText.push('ROADMAP SEMAINE '+w.semaine+': '+w.titre+'\n'+(w.jours||[]).map(function(j){return j.jour+': '+j.tache;}).join('\n'));
+    });
+  }
+
+  if(e.outils&&e.outils.length){
+    var ob=(e.outils||[]).map(function(o){return '<div class="page-tool"><div class="page-tool-ico">'+(o.emoji||'🔧')+'</div><div><div class="page-tool-name">'+o.nom+'</div><div style="font-size:10px;color:var(--t3);">'+o.description+'</div>'+(o.lien?'<div style="font-size:10px;color:var(--bl);">'+o.lien+'</div>':'')+'</div></div>';}).join('');
+    pages.push(makePageBlock(pn++,'Outils','cpb-special','Outils et ressources','Nos recommandations',ob,0));
+    allText.push('OUTILS\n'+(e.outils||[]).map(function(o){return (o.emoji||'•')+' '+o.nom+': '+o.description;}).join('\n'));
+  }
+
+  if(e.glossaire&&e.glossaire.length){
+    var chunk=6;
+    for(var gi=0;gi<e.glossaire.length;gi+=chunk){
+      var slice=e.glossaire.slice(gi,gi+chunk);
+      var gb=slice.map(function(g){return '<div class="page-gl-item"><div class="page-gl-term">'+g.terme+'</div><div class="page-gl-def">'+g.definition+'</div></div>';}).join('');
+      var gpart=e.glossaire.length>chunk?' ('+(Math.floor(gi/chunk)+1)+'/'+Math.ceil(e.glossaire.length/chunk)+')':'';
+      pages.push(makePageBlock(pn++,'Glossaire'+gpart,'cpb-special','Glossaire','Termes cles',gb,0));
+      allText.push('GLOSSAIRE\n'+slice.map(function(g){return g.terme+': '+g.definition;}).join('\n'));
+    }
+  }
+
+  pages.push(makePageBlock(pn++,'Notes','cpb-special','Notes','Mes notes','<div style="display:flex;flex-direction:column;gap:0;">'+'<div style="height:24px;border-bottom:1px solid var(--b);"></div>'.repeat(8)+'</div>',0));
+  allText.push('NOTES\n[Pages de notes pour le lecteur]');
+
+  if(d.sources&&d.sources.length){
+    pages.push(makePageBlock(pn++,'Sources','cpb-special','Sources','References',d.sources.map(function(s,i){return '<div style="padding:4px 0;border-bottom:1px solid var(--b);font-size:10px;color:var(--t2);"><span style="color:var(--ac);font-weight:600;">['+( i+1)+']</span> '+s.titre+' — '+s.auteur+' ('+s.annee+')</div>';}).join(''),0));
+    allText.push('SOURCES\n'+d.sources.map(function(s,i){return '['+( i+1)+'] '+s.titre+' — '+s.auteur+' ('+s.annee+')';}).join('\n'));
+  }
+
+  if(e.bonus&&e.bonus.length){
+    var bb=e.bonus.map(function(b){return '<div style="display:flex;gap:7px;padding:6px 8px;background:var(--bg3);border-radius:var(--r);margin-bottom:5px;"><span style="font-size:9px;font-weight:600;padding:2px 5px;border-radius:4px;background:rgba(200,169,110,.1);color:var(--ac);border:1px solid rgba(200,169,110,.2);white-space:nowrap;">'+b.type+'</span><div><div style="font-size:11px;font-weight:500;color:var(--t);margin-bottom:2px;">'+b.titre+'</div><div style="font-size:10px;color:var(--t3);">'+b.description+'</div></div></div>';}).join('');
+    pages.push(makePageBlock(pn++,'Bonus','cpb-special','Bonus inclus','Ressources supplementaires',bb,0));
+    allText.push('BONUS\n'+e.bonus.map(function(b){return '['+b.type+'] '+b.titre+': '+b.description;}).join('\n'));
+  }
+
+  if(e.garantie){
+    pages.push(makePageBlock(pn++,'Garantie','cpb-special','Garantie','Satisfait ou rembourse','<div style="text-align:center;padding:6px 0;"><div style="font-size:20px;margin-bottom:7px;">&#128737;</div><div style="font-size:11px;color:var(--t2);line-height:1.7;">'+e.garantie+'</div></div>',wordCount(e.garantie)));
+    allText.push('GARANTIE\n'+e.garantie);
+  }
+
+  if(d.cta){
+    pages.push(makePageBlock(pn++,'CTA Final','cpb-cover','Mot de cloture','','<div style="text-align:center;padding:8px 0;"><div style="font-size:13px;color:var(--t2);line-height:1.6;font-style:italic;">"'+d.cta+'"</div><div style="margin-top:9px;font-size:10px;color:var(--t3);">— Instant Learning Guide</div></div>',0));
+    allText.push('MOT DE CLOTURE\n"'+d.cta+'"\n— Instant Learning Guide');
+  }
+
+  window._allPageText=allText;
+  var total=pn-1;
+  body.innerHTML='<div style="max-width:680px;"><div class="pages-toolbar"><div class="pages-count">'+total+' pages · pretes pour Canva</div><button class="pages-copy-all" onclick="copyAllPages()">&#128203; Copier toutes les pages</button></div><div class="pages-view active">'+pages.join('')+'</div></div>';
+}
+
+function copyPageBlock(btn){
+  var block=btn.closest('.canva-page');
+  var title=block.querySelector('.canva-page-title');
+  var bodyEl=block.querySelector('.canva-page-body');
+  var section=block.querySelector('.canva-page-badge');
+  var txt='';
+  if(section) txt+='['+section.textContent.trim()+']\n';
+  if(title) txt+=title.textContent.trim()+'\n\n';
+  if(bodyEl) txt+=bodyEl.innerText.trim();
+  navigator.clipboard.writeText(txt);
+  var orig=btn.textContent;btn.textContent='Copie !';
+  setTimeout(function(){btn.textContent=orig;},1500);
+  showToast('Page copiee !','ok');
+}
+function copyAllPages(){
+  if(!window._allPageText||!window._allPageText.length){showToast('Genere un e-book dabord.','err');return;}
+  navigator.clipboard.writeText(window._allPageText.join('\n\n==================\n\n'));
+  showToast('Toutes les pages copiees !','ok');
+}
+
+// ═══ LIBRARY ═══
+function saveToLibrary(){
+  if(!ebookData){showToast('Génère un e-book d\'abord.','err');return;}
+  const save={...ebookData,_enriched:enrichData};
+  const existing=library.findIndex(e=>e.titre===save.titre);
+  if(existing>=0) library[existing]=save;else library.unshift(save);
+  if(library.length>30) library=library.slice(0,30);
+  localStorage.setItem('ilg_lib',JSON.stringify(library));
+  showToast('Sauvegardé !','ok');
+}
+function renderLib(){
+  document.getElementById('lib-count').textContent=library.length+' guide(s)';
+  const body=document.getElementById('lib-body');
+  if(!library.length){body.innerHTML='<div class="lib-empty">Aucun e-book sauvegardé.</div>';return;}
+  body.innerHTML='<div class="lib-grid">'+library.map((d,i)=>'<div class="lib-card"><div class="lib-card-title">'+d.titre+'</div><div class="lib-card-meta"><span class="lib-badge theme">'+(d._theme||'').split('&')[0].trim()+'</span><span class="lib-badge lang">'+(d._lang||'FR')+'</span><span class="lib-badge mode">'+(d._mode==='full'?'Complet':'Plan')+'</span>'+(d._enriched?'<span class="lib-badge enriched">Enrichi</span>':'')+'</div><div class="lib-card-date">'+(d._date||'')+' · '+(d.pages_estimees||'?')+' pages</div><div class="lib-actions"><button class="lib-btn" onclick="loadFromLib('+i+')">Ouvrir</button><button class="lib-btn del" onclick="deleteFromLib('+i+')">Supprimer</button></div></div>').join('')+'</div>';
+}
+function loadFromLib(i){
+  ebookData=library[i];enrichData=library[i]._enriched||null;
+  renderFullPreview();enableExports();
+  document.getElementById('enrich-btn').style.display='block';
+  document.getElementById('phead-lbl').textContent='Guide chargé — '+(enrichData?'Enrichi ✓':'Étape 2 disponible');
+  showPanel('gen');showToast('Guide chargé !','ok');
+}
+function deleteFromLib(i){if(!confirm('Supprimer ?')) return;library.splice(i,1);localStorage.setItem('ilg_lib',JSON.stringify(library));renderLib();}
+
+// ═══ REVENUE SIM ═══
+const scenarios={real:{guides:5,price:14,sales:8,growth:10},opt:{guides:10,price:17,sales:15,growth:18},ambi:{guides:20,price:19,sales:25,growth:25}};
+function setScenario(s){document.querySelectorAll('.sc-tab').forEach((t,i)=>t.classList.toggle('active',['real','opt','ambi'][i]===s));const sc=scenarios[s];document.getElementById('sl-guides').value=sc.guides;document.getElementById('sl-price').value=sc.price;document.getElementById('sl-sales').value=sc.sales;document.getElementById('sl-growth').value=sc.growth;updateSim();}
+function updateSim(){
+  const g=parseInt(document.getElementById('sl-guides').value);
+  const p=parseInt(document.getElementById('sl-price').value);
+  const s=parseInt(document.getElementById('sl-sales').value);
+  const gr=parseInt(document.getElementById('sl-growth').value);
+  document.getElementById('v-guides').textContent=g;document.getElementById('v-price').textContent=p+' €';document.getElementById('v-sales').textContent=s;document.getElementById('v-growth').textContent=gr+' %';
+  const m=g*p*s;
+  document.getElementById('sim-monthly').textContent=m.toLocaleString('fr-FR')+' €';
+  document.getElementById('sim-annual').textContent=(m*12).toLocaleString('fr-FR')+' €';
+  document.getElementById('sim-guides').textContent=g;document.getElementById('sim-sales').textContent=g*s;
+  document.getElementById('sim-monthly-sub').textContent=g+' guides × '+s+' × '+p+'€';
+  document.getElementById('sim-annual-sub').textContent='soit ~'+Math.round(m*12/12).toLocaleString('fr-FR')+' €/mois';
+  let cum=m,rows='<tr><th>Mois</th><th>Revenu</th><th>Cumul</th></tr>';let total=0;
+  for(let i=1;i<=12;i++){const r=Math.round(cum);total+=r;rows+='<tr><td>M'+i+'</td><td class="'+(i>=9?'hi':'')+'">'+r.toLocaleString('fr-FR')+' €</td><td>'+Math.round(total).toLocaleString('fr-FR')+' €</td></tr>';cum*=(1+gr/100);}
+  document.getElementById('proj-table').innerHTML=rows;
+}
+
+// ═══ KANBAN ═══
+function saveKb(){localStorage.setItem('ilg_kb',JSON.stringify(kbCards));}
+function renderKb(){
+  ['idea','wip','done','pub'].forEach(col=>{
+    const c=document.getElementById('cards-'+col);
+    c.innerHTML=kbCards[col].map((card,i)=>'<div class="kb-card" draggable="true" ondragstart="dragStart(event,\''+col+'\','+i+')"><div class="kb-card-title">'+card.title+'</div><div class="kb-card-actions"><button class="kb-btn" onclick="moveKb(\''+col+'\','+i+',\'left\')">←</button><button class="kb-btn" onclick="moveKb(\''+col+'\','+i+',\'right\')">→</button><button class="kb-btn" style="color:var(--re)" onclick="delKb(\''+col+'\','+i+')">✕</button></div></div>').join('');
+    document.getElementById('cnt-'+col).textContent=kbCards[col].length;
+  });
+}
+function showKbInput(col){document.getElementById('kb-input-'+col).style.display='flex';document.getElementById('kb-text-'+col).focus();}
+function hideKbInput(col){document.getElementById('kb-input-'+col).style.display='none';document.getElementById('kb-text-'+col).value='';}
+function saveKbCard(col){const txt=document.getElementById('kb-text-'+col).value.trim();if(!txt) return;kbCards[col].push({title:txt});saveKb();renderKb();hideKbInput(col);}
+function delKb(col,i){kbCards[col].splice(i,1);saveKb();renderKb();}
+function moveKb(col,i,dir){const cols=['idea','wip','done','pub'];const ci=cols.indexOf(col);const nc=dir==='right'?cols[Math.min(ci+1,3)]:cols[Math.max(ci-1,0)];if(nc===col) return;kbCards[nc].push(kbCards[col].splice(i,1)[0]);saveKb();renderKb();}
+function dragStart(e,col,i){dragId={col,i};e.dataTransfer.effectAllowed='move';}
+function allowDrop(e){e.preventDefault();}
+function drop(e,targetCol){e.preventDefault();if(!dragId||dragId.col===targetCol) return;kbCards[targetCol].push(kbCards[dragId.col].splice(dragId.i,1)[0]);saveKb();renderKb();dragId=null;}
+renderKb();
+
+// ═══ MARKETING ═══
+function refreshMkt(){const has=!!ebookData;document.getElementById('mkt-no-eb').style.display=has?'none':'flex';const mt=document.getElementById('mkt-tools');mt.style.display=has?'flex':'none';if(has) renderMktTool(mktTool);}
+function setMkt(tool){mktTool=tool;document.querySelectorAll('.mkt-tt').forEach(t=>{['sh','se','so','qu','rs','vi'].forEach(cls=>{if(t.classList.contains(cls)) t.classList.toggle('active',cls===tool);});});renderMktTool(tool);}
+function renderMktTool(tool){
+  const body=document.getElementById('mkt-body');if(!ebookData){body.innerHTML='';return;}
+  const d=ebookData;
+  const descs={sh:'Fiche Shopify pour "<b style="color:var(--t)">'+d.titre+'</b>".',se:'Article SEO pour "<b style="color:var(--t)">'+d.titre+'</b>".',so:'Kit social pour "<b style="color:var(--t)">'+d.titre+'</b>".',qu:'Quiz interactif pour "<b style="color:var(--t)">'+d.titre+'</b>".',rs:'Résumé 1 page de "<b style="color:var(--t)">'+d.titre+'</b>".',vi:'Prompts visuels pour "<b style="color:var(--t)">'+d.titre+'</b>".'};
+  const btns={sh:'🛒 Générer fiche Shopify',se:'📈 Générer article SEO',so:'📱 Générer kit social',qu:'🎯 Générer quiz',rs:'📄 Générer résumé 1p',vi:'🎨 Générer prompts visuels'};
+  const fns={sh:'genShopify()',se:'genSEO()',so:'genSocial()',qu:'genQuiz()',rs:'genResume()',vi:'genVisual()'};
+  body.innerHTML='<p style="font-size:11px;color:var(--t2);margin-bottom:14px;line-height:1.6;">'+descs[tool]+'</p><button class="mkt-gb '+tool+'" id="mkt-gb" onclick="'+fns[tool]+'">'+btns[tool]+'</button><div class="mkt-res" id="mkt-res"></div>';
+}
+
+async function callAI(msg,sys,tokens){
+  const res=await fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:tokens,system:sys,messages:[{role:'user',content:msg}]})});
+  const data=await res.json();
+  if(data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+  if(!data.content||!Array.isArray(data.content)) throw new Error('Reponse invalide: '+JSON.stringify(data).slice(0,120));
+  const raw=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+  const clean=raw.replace(/```json/g,'').replace(/```/g,'').trim();
+  try{return JSON.parse(clean);}catch(e){const m=clean.match(/\{[\s\S]*\}/);if(m) return JSON.parse(m[0]);throw new Error('JSON invalide');}
+}
+async function mktGen(tool,msg,sys,tokens,renderFn){
+  const btn=document.getElementById('mkt-gb');btn.disabled=true;btn.textContent='Génération...';
+  document.getElementById('mkt-res').innerHTML='<div class="mkt-prg">En cours...</div>';
+  document.getElementById('mkt-res').classList.add('show');
+  try{const s=await callAI(msg,sys,tokens);renderFn(s);showToast('Généré !','ok');}
+  catch(e){document.getElementById('mkt-res').innerHTML='<div class="mkt-prg" style="color:var(--re)">Erreur: '+e.message+'</div>';console.error(e);}
+  finally{btn.disabled=false;btn.textContent={sh:'🛒 Générer fiche Shopify',se:'📈 Générer article SEO',so:'📱 Générer kit social',qu:'🎯 Générer quiz',rs:'📄 Générer résumé 1p',vi:'🎨 Générer prompts visuels'}[mktTool];}
+}
+function genShopify(){const d=ebookData;mktGen('sh','Fiche Shopify pour "'+d.titre+'". Theme:'+d._theme+'. Chapitres:'+d.chapitres.map(c=>c.titre).join(', ')+'. JSON: {"titre_produit":"max70","meta_description":"max160","description_courte":"2-3 phrases","description_complete":"HTML200-300mots","bullet_points":["x5"],"tags":["x6"],"faq":[{"question":"...","reponse":"..."}],"prix_suggere":"9.99"}','Expert copywriting Shopify. JSON valide sans backticks.',2000,s=>{document.getElementById('mkt-res').innerHTML='<div class="mkt-sec"><div class="mkt-st gr">Titre & Prix <button class="cpbtn" onclick="cp(\''+esc(s.titre_produit+'\n'+s.meta_description)+'\')">Copier</button></div><div class="mkt-fl"><div class="mkt-fll">Titre</div><div class="mkt-fv hl">'+s.titre_produit+'</div></div><div class="mkt-fl"><div class="mkt-fll">Meta</div><div class="mkt-fv">'+s.meta_description+'</div></div><div class="mkt-fl"><div class="mkt-fll">Prix</div><div class="mkt-fv" style="color:var(--ac);font-weight:600;">€'+s.prix_suggere+'</div></div></div><div class="mkt-sec"><div class="mkt-st gr">Description <button class="cpbtn" onclick="cp(\''+esc(s.description_courte)+'\')">Copier</button></div><div class="mkt-fv">'+s.description_courte+'</div></div><div class="mkt-sec"><div class="mkt-st gr">HTML <button class="cpbtn" onclick="cp(\''+esc(s.description_complete)+'\')">Copier</button></div><div class="mkt-fv" style="font-family:monospace;font-size:10px;max-height:100px;overflow-y:auto;">'+s.description_complete.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div></div><div class="mkt-sec"><div class="mkt-st gr">Bénéfices</div>'+(s.bullet_points||[]).map(p=>'<div style="display:flex;gap:6px;font-size:11px;color:var(--t2);padding:3px 0;"><span style="color:var(--gr);">✓</span><span>'+p+'</span></div>').join('')+'</div><div class="mkt-sec"><div class="mkt-st gr">Tags</div><div class="mtags">'+(s.tags||[]).map(t=>'<span class="mtag">'+t+'</span>').join('')+'</div></div><div class="mkt-sec"><div class="mkt-st gr">FAQ <button class="cpbtn" onclick="cp(\''+esc((s.faq||[]).map(f=>f.question+'\n'+f.reponse).join('\n\n'))+'\')">Copier</button></div>'+(s.faq||[]).map(f=>'<div style="margin-bottom:7px;"><div style="font-size:11px;font-weight:500;color:var(--t);">Q: '+f.question+'</div><div style="font-size:11px;color:var(--t2);">'+f.reponse+'</div></div>').join('')+'</div>';});}
+function genSEO(){const d=ebookData;mktGen('se','Article SEO pour "'+d.titre+'". Theme:'+d._theme+'. JSON: {"mot_cle_principal":"...","mots_cles_secondaires":["x3"],"titre_seo":"H1 max65","meta_description":"max160","intro":"120-150mots","sections":[{"h2":"...","contenu":"150-200mots"}],"cta_paragraphe":"80-100mots","conclusion":"80-100mots","slug_suggere":"url-tirets"}. 4-5 sections.','Expert SEO. JSON valide sans backticks.',3000,s=>{const full=s.titre_seo+'\n\n'+s.intro+'\n\n'+(s.sections||[]).map(x=>'## '+x.h2+'\n\n'+x.contenu).join('\n\n')+'\n\n'+s.cta_paragraphe+'\n\n'+s.conclusion;document.getElementById('mkt-res').innerHTML='<div class="mkt-sec"><div class="mkt-st bl">SEO <button class="cpbtn" onclick="cp(\''+esc(full)+'\')">Copier article</button></div><div class="mkt-fl"><div class="mkt-fll">Titre H1</div><div class="mkt-fv hl">'+s.titre_seo+'</div></div><div class="mkt-fl"><div class="mkt-fll">Meta</div><div class="mkt-fv">'+s.meta_description+'</div></div><div class="mkt-fl"><div class="mkt-fll">Slug</div><div class="mkt-fv" style="font-family:monospace;font-size:10px;color:var(--bl);">/'+s.slug_suggere+'</div></div><div class="mkt-fl"><div class="mkt-fll">Mots-clés</div><div class="mtags">'+[s.mot_cle_principal,...(s.mots_cles_secondaires||[])].map(k=>'<span class="mtag">'+k+'</span>').join('')+'</div></div></div><div class="mkt-sec"><div class="mkt-st bl">Article</div><div class="mkt-fl"><div class="mkt-fll">Intro</div><div class="mkt-fv">'+s.intro+'</div></div>'+(s.sections||[]).map(sec=>'<div class="mkt-fl"><div class="mkt-fll">H2: '+sec.h2+'</div><div class="mkt-fv">'+sec.contenu+'</div></div>').join('')+'<div class="mkt-fl"><div class="mkt-fll">CTA</div><div class="mkt-fv" style="border-color:rgba(200,169,110,.2)">'+s.cta_paragraphe+'</div></div><div class="mkt-fl"><div class="mkt-fll">Conclusion</div><div class="mkt-fv">'+s.conclusion+'</div></div></div>';});}
+function genSocial(){const d=ebookData;mktGen('so','Kit social pour "'+d.titre+'". Theme:'+d._theme+'. JSON: {"instagram":{"post_principal":"150-200mots","hashtags":["#x8"],"caption_court":"50-70mots","idee_visuel":"..."},"linkedin":{"post":"180-220mots","hashtags":["#x5"]},"tiktok":{"script":"60-80mots","hook":"max15mots"},"email_teaser":"100-120mots"}','Expert social media. JSON valide sans backticks.',2500,s=>{document.getElementById('mkt-res').innerHTML='<div class="mkt-sec"><div class="mkt-st or">Instagram <button class="cpbtn" onclick="cp(\''+esc(s.instagram.post_principal+'\n\n'+(s.instagram.hashtags||[]).join(' '))+'\')">Copier</button></div><div class="post-card"><div class="post-hdr"><span class="post-pl ig">INSTAGRAM</span></div><div class="post-cnt">'+s.instagram.post_principal+'</div><div class="post-ht">'+(s.instagram.hashtags||[]).join(' ')+'</div></div><div class="mkt-fl" style="margin-top:7px;"><div class="mkt-fll">Story</div><div class="mkt-fv">'+s.instagram.caption_court+'</div></div><div class="mkt-fl"><div class="mkt-fll">Idée visuel</div><div class="mkt-fv" style="font-style:italic;color:var(--t3);">'+s.instagram.idee_visuel+'</div></div></div><div class="mkt-sec"><div class="mkt-st or">LinkedIn <button class="cpbtn" onclick="cp(\''+esc(s.linkedin.post+'\n\n'+(s.linkedin.hashtags||[]).join(' '))+'\')">Copier</button></div><div class="post-card"><div class="post-hdr"><span class="post-pl li">LINKEDIN</span></div><div class="post-cnt">'+s.linkedin.post+'</div><div class="post-ht">'+(s.linkedin.hashtags||[]).join(' ')+'</div></div></div><div class="mkt-sec"><div class="mkt-st or">TikTok <button class="cpbtn" onclick="cp(\''+esc(s.tiktok.script)+'\')">Copier</button></div><div class="mkt-fl"><div class="mkt-fll">Hook</div><div class="mkt-fv hl">'+s.tiktok.hook+'</div></div><div class="post-card"><div class="post-hdr"><span class="post-pl tt">SCRIPT</span></div><div class="post-cnt">'+s.tiktok.script+'</div></div></div><div class="mkt-sec"><div class="mkt-st or">Email <button class="cpbtn" onclick="cp(\''+esc(s.email_teaser)+'\')">Copier</button></div><div class="mkt-fv">'+s.email_teaser+'</div></div>';});}
+function genQuiz(){const d=ebookData;mktGen('qu','Quiz 8 questions QCM pour "'+d.titre+'". Chapitres: '+d.chapitres.map(c=>c.titre).join(', ')+'. JSON: {"questions":[{"question":"...","options":["A)...","B)...","C)...","D)..."],"correct":0,"explication":"..."}]}','Expert pedagogique. JSON valide sans backticks.',2000,s=>{let html='<div class="mkt-sec"><div class="mkt-st pu">Quiz — '+d.titre+'</div>';(s.questions||[]).forEach((q,qi)=>{html+='<div class="quiz-q" id="qq'+qi+'"><div class="quiz-qn">'+(qi+1)+'. '+q.question+'</div>'+q.options.map((o,oi)=>'<div class="quiz-opt" onclick="answerQ('+qi+','+oi+','+q.correct+',\''+esc(q.explication)+'\')">'+o+'</div>').join('')+'<div class="quiz-exp" id="qe'+qi+'">'+q.explication+'</div></div>';});html+='</div>';document.getElementById('mkt-res').innerHTML=html;});}
+function answerQ(qi,sel,correct,expl){document.querySelectorAll('#qq'+qi+' .quiz-opt').forEach((o,i)=>{o.style.pointerEvents='none';if(i===correct) o.classList.add('correct');});document.getElementById('qe'+qi).classList.add('show');showToast(sel===correct?'Bonne réponse ! ✓':'Mauvaise réponse.','err');}
+function genResume(){const d=ebookData;mktGen('rs','Resume executif 1 page pour "'+d.titre+'". JSON: {"accroche":"1 phrase choc","probleme":"2-3 phrases","points_essentiels":["x5"],"trois_actions":["action1","action2","action3"],"citation_cle":"citation marquante","cta":"appel action court"}','Expert synthese. JSON valide sans backticks.',1000,s=>{const txt=d.titre+'\n\n'+s.accroche+'\n\n'+s.probleme+'\n\n'+(s.points_essentiels||[]).map(p=>'• '+p).join('\n')+'\n\n'+(s.trois_actions||[]).map((a,i)=>(i+1)+'. '+a).join('\n')+'\n\n"'+s.citation_cle+'"';document.getElementById('mkt-res').innerHTML='<div style="display:flex;justify-content:flex-end;margin-bottom:8px;"><button class="cpbtn" style="font-size:10px;padding:4px 10px;" onclick="cp(\''+esc(txt)+'\')">📋 Copier tout</button></div><div class="resume-card"><div class="resume-title">'+d.titre+'</div><div class="resume-sub">'+s.accroche+'</div><div class="resume-section"><div class="resume-section-title">Le problème</div><p style="font-size:11px;color:var(--t2);line-height:1.7;">'+s.probleme+'</p></div><div class="resume-section"><div class="resume-section-title">5 points essentiels</div>'+(s.points_essentiels||[]).map(p=>'<div class="resume-point">'+p+'</div>').join('')+'</div><div class="resume-section"><div class="resume-section-title">3 actions prioritaires</div>'+(s.trois_actions||[]).map((a,i)=>'<div style="background:rgba(76,175,125,.06);border:1px solid rgba(76,175,125,.15);border-radius:6px;padding:5px 9px;font-size:10px;color:var(--gr);margin-bottom:5px;">'+(i+1)+'. '+a+'</div>').join('')+'</div><div style="padding:8px 11px;border-left:2px solid var(--ac);font-size:11px;color:var(--t2);font-style:italic;margin-top:10px;">"'+s.citation_cle+'"</div><div style="text-align:center;font-size:11px;font-weight:600;color:var(--ac);margin-top:9px;">'+s.cta+'</div></div>';});}
+function genVisual(){const d=ebookData;mktGen('vi','Prompts visuels pour "'+d.titre+'" ('+d._theme+'). JSON: {"style_general":"description style","couverture":{"midjourney":"prompt anglais","dalle":"prompt anglais","ideogram":"prompt anglais"},"chapitres":[{"chapitre":"titre court","prompt_en":"prompt anglais"}],"mockup_produit":"prompt","banniere_reseaux":"prompt"}. Max 5 chapitres.','Expert direction artistique prompt engineering. JSON valide sans backticks.',2000,s=>{let html='<div class="mkt-sec"><div class="mkt-st pi">Style général</div><div class="mkt-fv hl">'+s.style_general+'</div></div><div class="mkt-sec"><div class="mkt-st pi">Couverture</div>';['midjourney','dalle','ideogram'].forEach(t=>{const p=(s.couverture||{})[t]||'';html+='<div class="mkt-fl"><div class="mkt-fll">'+t.toUpperCase()+' <button class="cpbtn" onclick="cp(\''+esc(p)+'\')">Copier</button></div><div class="mkt-fv" style="font-family:monospace;font-size:10px;">'+p+'</div></div>';});html+='</div>';if(s.chapitres){html+='<div class="mkt-sec"><div class="mkt-st pi">Chapitres</div>';s.chapitres.forEach(c=>{html+='<div class="mkt-fl"><div class="mkt-fll">'+c.chapitre+' <button class="cpbtn" onclick="cp(\''+esc(c.prompt_en)+'\')">Copier</button></div><div class="mkt-fv" style="font-family:monospace;font-size:10px;">'+c.prompt_en+'</div></div>';});html+='</div>';}html+='<div class="mkt-sec"><div class="mkt-st pi">Mockup <button class="cpbtn" onclick="cp(\''+esc(s.mockup_produit||'')+'\')">Copier</button></div><div class="mkt-fv" style="font-family:monospace;font-size:10px;">'+(s.mockup_produit||'')+'</div></div><div class="mkt-sec"><div class="mkt-st pi">Bannière <button class="cpbtn" onclick="cp(\''+esc(s.banniere_reseaux||'')+'\')">Copier</button></div><div class="mkt-fv" style="font-family:monospace;font-size:10px;">'+(s.banniere_reseaux||'')+'</div></div>';document.getElementById('mkt-res').innerHTML=html;});}
+
+// ═══ TRENDS ═══
+async function searchTrends(){
+  const query = document.getElementById('tr-q').value.trim();
+  const grid = document.getElementById('ideas-grid');
+  const btn = document.getElementById('tr-btn');
+  btn.disabled = true;
+  grid.innerHTML = '<div class="tr-empty"><p style="font-size:12px;">Analyse des tendances en cours...</p></div>';
+
+  const sujet = query ? ('sur la thematique ' + query) : 'dans plusieurs categories variees';
+  const userMsg = 'Genere 8 idees de guides pratiques educatifs ' + sujet + ' pour 2025. Reponds UNIQUEMENT avec du JSON valide sans backticks. Format exact: {"idees":[{"titre":"...","categorie":"Business","public":"...","pourquoi_tendance":"...","potentiel":"Fort","prix_suggere":"15 EUR","angle":"..."}]}';
+
+  try {
+    const res = await fetch('/api', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2500,
+        system: 'Tu reponds UNIQUEMENT avec du JSON valide. Aucun texte avant ou apres. Aucun backtick. Aucun markdown. Juste le JSON brut.',
+        messages: [{ role: 'user', content: userMsg }]
+      })
+    });
+
+    if (!res.ok) {
+      const t = await res.text();
+      throw new Error('HTTP ' + res.status + ' — ' + t.slice(0, 100));
+    }
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    if (!data.content || !data.content.length) throw new Error('Reponse vide');
+
+    const txt = data.content.filter(function(b){ return b.type === 'text'; }).map(function(b){ return b.text; }).join('');
+    const clean = txt.replace(/```json/g,'').replace(/```/g,'').trim();
+
+    let parsed;
+    try { parsed = JSON.parse(clean); }
+    catch(je) {
+      const m = clean.match(/\{[\s\S]*\}/);
+      if (m) parsed = JSON.parse(m[0]);
+      else throw new Error('JSON invalide: ' + clean.slice(0, 80));
+    }
+
+    const idees = parsed.idees || [];
+    if (!idees.length) throw new Error('Aucune idee dans la reponse');
+    renderTrends(idees);
+    showToast(idees.length + ' idees generees !', 'ok');
+
+  } catch(e) {
+    console.error('Trends error:', e);
+    grid.innerHTML = '<div class="tr-empty" style="grid-column:1/-1"><p style="color:var(--red);font-size:12px;line-height:1.7;">Erreur : ' + e.message + '</p><p style="font-size:11px;color:var(--text3);margin-top:6px;">Reessaie ou verifie ta connexion.</p></div>';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderTrends(idees){
+  const grid=document.getElementById('ideas-grid');
+  if(!idees.length){grid.innerHTML=`<div class="tr-empty"><p>Aucune idée trouvée.</p></div>`;return;}
+  window._ti=idees;
+  const pc={'Fort':'ok','Très fort':'hot','Exceptionnel':'hot'};
+  grid.innerHTML=idees.map((idea,i)=>`<div class="idea-card" onclick="useIdea(${i})">
+    <div class="ic-ttl">${idea.titre}</div>
+    <div class="ic-meta"><span class="ibadge cat">${idea.categorie}</span><span class="ibadge ${pc[idea.potentiel]||'ok'}">${idea.potentiel}</span><span class="ibadge pri">${idea.prix_suggere}</span></div>
+    <div class="ic-why">${idea.pourquoi_tendance}</div>
+    <div class="ic-why" style="font-style:italic;">${idea.angle}</div>
+    <button class="use-btn" onclick="event.stopPropagation();useIdea(${i})">Utiliser →</button>
+  </div>`).join('')+`<div style="grid-column:1/-1;font-size:10px;color:var(--text3);padding-top:3px;">Clique sur une idée pour la transférer dans le générateur.</div>`;
+}
+
+
+function useIdea(i){if(!window._ti||!window._ti[i]) return;const idea=window._ti[i];document.getElementById('f-title').value=idea.titre;document.getElementById('f-goal').value=idea.angle+' — Public: '+idea.public;showPanel('gen');showToast('Idée transférée !','ok');}
+
+// ═══ EXPORTS ═══
+function buildCanva(){
+  if(!ebookData) return '';const d=ebookData;const e=enrichData||{};const isFull=d._mode==='full';
+  let t='╔══════════════════════════════╗\n  '+d.titre+'\n  '+(d.sous_titre||'')+'\n╚══════════════════════════════╝\n';
+  t+='\n© 2025 Instant Learning Guide — Tous droits réservés\n';
+  if(e.avant_propos) t+='\n── AVANT-PROPOS ──\n'+e.avant_propos+'\n';
+  if(e.prerequis) t+='\n── PRÉREQUIS ──\n'+(e.prerequis||[]).map(p=>'✓ '+p).join('\n')+'\n';
+  if(e.comment_utiliser) t+='\n── COMMENT UTILISER CE GUIDE ──\n'+e.comment_utiliser+'\n';
+  t+='\n── SOMMAIRE ──\n'+d.chapitres.map((c,i)=>(i+1)+'. '+c.titre).join('\n')+'\n';
+  if(e.resultats_attendus){const r=e.resultats_attendus;t+='\n── RÉSULTATS ATTENDUS ──\nJ+7: '+(r.j7||[]).join(' | ')+'\nJ+30: '+(r.j30||[]).join(' | ')+'\nJ+90: '+(r.j90||[]).join(' | ')+'\n';}
+  t+='\n── INTRODUCTION ──\n'+d.intro+'\n';
+  d.chapitres.forEach(ch=>{t+='\n══ CHAPITRE '+ch.numero+' : '+ch.titre.toUpperCase()+' ══\n\n';if(isFull&&ch.sections){ch.sections.forEach(s=>{t+='▸ '+s.titre_section+'\n'+s.contenu+'\n';if(s.exemple) t+='\nEXEMPLE: '+s.exemple+'\n';if(s.erreur) t+='⚠ ERREUR: '+s.erreur+'\n';t+='\n';});}else{t+=ch.resume+'\n\n'+ch.points_cles.map(p=>'→ '+p).join('\n')+'\n';}t+='\n⚡ ACTION: '+ch.action+'\n';});
+  if(d.checklist_finale) t+='\n── CHECKLIST FINALE ──\n'+d.checklist_finale.map(s=>'☐ '+s).join('\n')+'\n';
+  if(e.roadmap_30j){t+='\n── ROADMAP 30 JOURS ──\n';(e.roadmap_30j||[]).forEach(w=>{t+='Semaine '+w.semaine+' — '+w.titre+'\n';(w.jours||[]).forEach(j=>{t+='  '+j.jour+': '+j.tache+'\n';});});}
+  if(e.outils){t+='\n── OUTILS & RESSOURCES ──\n';(e.outils||[]).forEach(o=>{t+=o.emoji+' '+o.nom+': '+o.description+(o.lien?' ('+o.lien+')':'')+'\n';});}
+  if(e.glossaire){t+='\n── GLOSSAIRE ──\n';(e.glossaire||[]).forEach(g=>{t+=g.terme+': '+g.definition+'\n';});}
+  if(d.sources&&d.sources.length) t+='\n── SOURCES ──\n'+d.sources.map((s,i)=>'['+( i+1)+'] '+s.titre+' — '+s.auteur+' ('+s.annee+')').join('\n')+'\n';
+  if(e.bonus){t+='\n── BONUS ──\n';(e.bonus||[]).forEach(b=>{t+='['+b.type+'] '+b.titre+': '+b.description+'\n';});}
+  if(e.garantie) t+='\n── GARANTIE ──\n'+e.garantie+'\n';
+  if(d.cta) t+='\n"'+d.cta+'"\n— Instant Learning Guide\n';
+  return t;
+}
+function buildMd(){
+  if(!ebookData) return '';const d=ebookData;const e=enrichData||{};const isFull=d._mode==='full';
+  let md='# '+d.titre+'\n> '+(d.sous_titre||'')+'\n\n';
+  md+='*© 2025 Instant Learning Guide · instantlearningguide.com*\n\n---\n\n';
+  if(e.avant_propos) md+='## Avant-propos\n\n*'+e.avant_propos+'*\n\n---\n\n';
+  if(e.prerequis){md+='## Prérequis\n\n'+(e.prerequis||[]).map(p=>'- ✓ '+p).join('\n')+'\n\n';if(e.avertissements) md+='> ⚠️ '+e.avertissements+'\n\n';}
+  if(e.comment_utiliser) md+='## Comment utiliser ce guide\n\n'+e.comment_utiliser+'\n\n---\n\n';
+  md+='## Sommaire\n\n'+d.chapitres.map((c,i)=>(i+1)+'. '+c.titre).join('\n')+'\n\n---\n\n';
+  if(e.resultats_attendus){const r=e.resultats_attendus;md+='## Résultats attendus\n\n**J+7:** '+(r.j7||[]).join(' · ')+'\n\n**J+30:** '+(r.j30||[]).join(' · ')+'\n\n**J+90:** '+(r.j90||[]).join(' · ')+'\n\n---\n\n';}
+  md+='## Introduction\n\n'+d.intro+'\n\n---\n\n';
+  d.chapitres.forEach(ch=>{md+='## Chapitre '+ch.numero+' : '+ch.titre+'\n\n';if(isFull&&ch.sections){ch.sections.forEach(s=>{md+='### '+s.titre_section+'\n\n'+s.contenu+'\n\n';if(s.exemple) md+='> **Exemple:** '+s.exemple+'\n\n';if(s.erreur) md+='> ⚠️ '+s.erreur+'\n\n';});}else{md+=ch.resume+'\n\n'+ch.points_cles.map(p=>'- '+p).join('\n')+'\n\n';}md+='> ⚡ **Action:** '+ch.action+'\n\n---\n\n';});
+  if(d.checklist_finale) md+='## Checklist finale\n\n'+d.checklist_finale.map(s=>'- [ ] '+s).join('\n')+'\n\n---\n\n';
+  if(e.roadmap_30j){md+='## Roadmap 30 jours\n\n';(e.roadmap_30j||[]).forEach(w=>{md+='**Semaine '+w.semaine+' — '+w.titre+'**\n\n';(w.jours||[]).forEach(j=>{md+='- **'+j.jour+':** '+j.tache+'\n';});md+='\n';});}
+  if(e.outils){md+='## Outils & ressources\n\n';(e.outils||[]).forEach(o=>{md+='- '+o.emoji+' **'+o.nom+'** — '+o.description+(o.lien?' ([lien]('+o.lien+'))':'')+'\n';});md+='\n';}
+  if(e.glossaire){md+='## Glossaire\n\n';(e.glossaire||[]).forEach(g=>{md+='**'+g.terme+'** : '+g.definition+'\n\n';});}
+  if(d.sources&&d.sources.length) md+='## Sources\n\n'+d.sources.map((s,i)=>(i+1)+'. **'+s.titre+'** — '+s.auteur+' ('+s.annee+')').join('\n')+'\n\n';
+  if(e.bonus){md+='## Bonus\n\n';(e.bonus||[]).forEach(b=>{md+='- **['+b.type+'] '+b.titre+'** : '+b.description+'\n';});md+='\n';}
+  if(e.garantie) md+='## Garantie\n\n'+e.garantie+'\n\n';
+  if(d.cta) md+='---\n\n*"'+d.cta+'"*\n\n*— Instant Learning Guide*\n';
+  return md;
+}
+function copyMd(){cp(buildMd());}
+function openCanvaModal(){document.getElementById('canva-content').textContent=buildCanva();document.getElementById('canva-modal').classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function copyCanvaContent(){cp(buildCanva());closeModal('canva-modal');}
+document.getElementById('canva-modal').addEventListener('click',function(e){if(e.target===this)closeModal('canva-modal');});
+function cp(txt){try{navigator.clipboard.writeText(txt);showToast('Copié !','ok');}catch(e){showToast('Erreur copie.','err');}}
+function esc(str){return(str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');}
+function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');setTimeout(()=>t.className='toast',2400);}
+
+updateSim();
+</script>
+</body>
+</html>
